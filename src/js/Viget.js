@@ -45,8 +45,8 @@ export default class Viget extends Component {
     this.scene.add(this.ambientLight);
     this.scene.add(this.directionalLight);
     
-    //ADD BIG SPHERE GEOMETRY
-    const bigSphereGeometry = new THREE.SphereGeometry( 5, 30, 30 );
+    //ADD BIG SPHERE MESH
+    const bigSphereGeometry = new THREE.SphereGeometry( 5, 50, 50 );
     const bigSphereMaterial = new THREE.MeshPhongMaterial({
       color: 0x1595BA,
       specular: 0x333333,
@@ -55,7 +55,18 @@ export default class Viget extends Component {
     this.bigSphere = new THREE.Mesh(bigSphereGeometry, bigSphereMaterial);
     this.scene.add(this.bigSphere);
     
-    //ADD SPACE BACKGROUND GEOMETRY & TEXTURE
+    // ADD SMALL SPHERE MESH
+    const smallSphereGeometry = new THREE.SphereGeometry(2, 50,50);
+    const smallSphereMaterial = new THREE.MeshPhongMaterial({
+      color: 0xF16C20,
+      specular: 0x333333,
+      shininess: 25
+    });
+    this.smallSphere = new THREE.Mesh(smallSphereGeometry, smallSphereMaterial);
+    this.smallSphere.position.set(7,5,0);
+    this.scene.add(this.smallSphere);
+    
+    //ADD SPACE BACKGROUND MESH
     const loader = new THREE.TextureLoader();
     loader.load( space, texture => {
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
