@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import * as THREE from 'three';
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import '../scss/viget.scss';
+import space from '../images/space.jpg';
+//Needs to be invoked with THREE
+const OrbitControls = require('three-orbit-controls')(THREE);
 
 export default class Viget extends Component {
 
@@ -21,10 +23,10 @@ export default class Viget extends Component {
     this.camera = new THREE.PerspectiveCamera(
       45,
       width / height,
-      0.1,
-      1000
+      1,
+      10000
     );
-    this.camera.position.set(0,0,10);
+    this.camera.position.set(0,0,30);
     
     //ADD RENDERER
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -34,7 +36,7 @@ export default class Viget extends Component {
  
     //ADD CONTROLS
     this.controls = new OrbitControls( this.camera, this.renderer.domElement);
-    //this.controls.enableZoom = false;
+    this.controls.enableZoom = false;
     
     //ADD LIGHT
     this.ambientLight = new THREE.AmbientLight(0x888888);
@@ -43,8 +45,8 @@ export default class Viget extends Component {
     this.scene.add(this.ambientLight);
     this.scene.add(this.directionalLight);
     
-    //ADD GEOMETRIES
-    const bigSphereGeometry = new THREE.SphereGeometry( 3, 50, 50 );
+    //ADD BIG SPHERE GEOMETRY
+    const bigSphereGeometry = new THREE.SphereGeometry( 5, 30, 30 );
     const bigSphereMaterial = new THREE.MeshPhongMaterial({
       color: 0x1595BA,
       specular: 0x333333,
@@ -52,6 +54,22 @@ export default class Viget extends Component {
     });
     this.bigSphere = new THREE.Mesh(bigSphereGeometry, bigSphereMaterial);
     this.scene.add(this.bigSphere);
+    
+    //ADD SPACE BACKGROUND GEOMETRY & TEXTURE
+    const loader = new THREE.TextureLoader();
+    loader.load( space, texture => {
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        texture.offset.set(0, 0);
+        texture.repeat.set(2, 2);
+        const spaceGeometry = new THREE.SphereGeometry(1000, 50, 50);
+        const spaceMaterial = new THREE.MeshPhongMaterial({
+        map: texture,
+        side: THREE.DoubleSide,
+        shininess: 0
+      });
+    this.spaceField = new THREE.Mesh(spaceGeometry, spaceMaterial);
+    this.scene.add(this.spaceField);
+    });
 
     this.start();
   }
@@ -73,10 +91,10 @@ export default class Viget extends Component {
   }
     
   animate = () => {
-     this.bigSphere.rotation.y -= .0005;
-     this.renderScene();
-     this.frameId = window.requestAnimationFrame(this.animate);
-   }
+    this.bigSphere.rotation.y += .0005;
+    this.renderScene();
+    this.frameId = window.requestAnimationFrame(this.animate);
+  };
    
   renderScene = () => {
     this.renderer.render(this.scene, this.camera);
