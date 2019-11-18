@@ -46,7 +46,7 @@ export default class Viget extends Component {
     this.scene.add(this.directionalLight);
     
     //ADD BIG SPHERE MESH
-    const bigSphereGeometry = new THREE.SphereGeometry( 5, 50, 50 );
+    const bigSphereGeometry = new THREE.SphereGeometry(5, 50, 50);
     const bigSphereMaterial = new THREE.MeshPhongMaterial({
       color: 0x1595BA,
       specular: 0x333333,
@@ -63,7 +63,7 @@ export default class Viget extends Component {
       shininess: 25
     });
     this.smallSphere = new THREE.Mesh(smallSphereGeometry, smallSphereMaterial);
-    this.smallSphere.position.set(7,5,0);
+    this.smallSphere.position.set(7, 5, 0);
     this.scene.add(this.smallSphere);
     
     //ADD SPACE BACKGROUND MESH
@@ -81,6 +81,15 @@ export default class Viget extends Component {
     this.spaceField = new THREE.Mesh(spaceGeometry, spaceMaterial);
     this.scene.add(this.spaceField);
     });
+    
+    this.r = 7;
+    this.theta = 0;
+    this.dTheta = 2 * Math.PI / 1000;
+    
+    this.sphereVector = new THREE.Vector3(0,0,0);
+    this.dx = .01;
+    this.dy = -.01;
+    this.dz = -.05;
 
     this.start();
   }
@@ -103,6 +112,25 @@ export default class Viget extends Component {
     
   animate = () => {
     this.bigSphere.rotation.y += .0005;
+    
+    //Move camera for fly-by effect
+    this.camera.position.x += this.dx;
+    this.camera.position.y += this.dy;
+    this.camera.position.z += this.dz;
+  
+    //Reset camera to original position
+    if (this.camera.position.z < -100) {
+      this.camera.position.set(0,35,70);
+    }
+    
+    //Have camera always facing the sphere vector at the origin (0,0,0)
+    this.camera.lookAt(this.sphereVector);
+    
+    // Have small sphere orbit around the big sphere
+    this.theta += this.dTheta;
+    this.smallSphere.position.x = this.r * Math.cos(this.theta);
+    this.smallSphere.position.z = this.r * Math.sin(this.theta);
+    
     this.renderScene();
     this.frameId = window.requestAnimationFrame(this.animate);
   };
