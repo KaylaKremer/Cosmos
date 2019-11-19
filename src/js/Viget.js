@@ -33,6 +33,15 @@ export default class Viget extends Component {
     this.renderer.setClearColor('#000000');
     this.renderer.setSize(width, height);
     mount.appendChild(this.renderer.domElement);
+    
+    // MAKE WINDOW RESPONSIVE
+    window.addEventListener('resize', () => {
+    const width = mount.clientWidth;
+    const height = mount.clientHeight;
+    this.renderer.setSize(width, height);
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+  });
  
     //ADD CONTROLS
     this.controls = new OrbitControls( this.camera, this.renderer.domElement);
