@@ -56,20 +56,18 @@ export default class Viget extends Component {
     
     //ADD BIG SPHERE MESH
     const bigSphereGeometry = new THREE.SphereGeometry(5, 50, 50);
-    const bigSphereMaterial = new THREE.MeshPhongMaterial({
+    const bigSphereMaterial = new THREE.MeshLambertMaterial({
       color: 0x1595BA,
-      specular: 0x333333,
-      shininess: 25
+      specular: 0x333333
     });
     this.bigSphere = new THREE.Mesh(bigSphereGeometry, bigSphereMaterial);
     this.scene.add(this.bigSphere);
     
     // ADD SMALL SPHERE MESH
     const smallSphereGeometry = new THREE.SphereGeometry(2, 50,50);
-    const smallSphereMaterial = new THREE.MeshPhongMaterial({
+    const smallSphereMaterial = new THREE.MeshLambertMaterial({
       color: 0xF16C20,
-      specular: 0x333333,
-      shininess: 25
+      specular: 0x333333
     });
     this.smallSphere = new THREE.Mesh(smallSphereGeometry, smallSphereMaterial);
     this.smallSphere.position.set(7, 5, 0);
@@ -82,10 +80,9 @@ export default class Viget extends Component {
         texture.offset.set(0, 0);
         texture.repeat.set(2, 2);
         const spaceGeometry = new THREE.SphereGeometry(1000, 50, 50);
-        const spaceMaterial = new THREE.MeshPhongMaterial({
+        const spaceMaterial = new THREE.MeshLambertMaterial({
         map: texture,
-        side: THREE.DoubleSide,
-        shininess: 0
+        side: THREE.DoubleSide
       });
     this.spaceField = new THREE.Mesh(spaceGeometry, spaceMaterial);
     this.scene.add(this.spaceField);
