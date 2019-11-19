@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import * as THREE from 'three';
 import '../scss/viget.scss';
 import space from '../images/space.jpg';
-//Needs to be invoked with THREE
-const OrbitControls = require('three-orbit-controls')(THREE);
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 export default class Viget extends Component {
 
@@ -23,7 +22,7 @@ export default class Viget extends Component {
     this.camera = new THREE.PerspectiveCamera(
       45,
       width / height,
-      1,
+      0.1,
       10000
     );
     this.camera.position.set(0,0,30);
@@ -36,11 +35,15 @@ export default class Viget extends Component {
     
     // MAKE WINDOW RESPONSIVE
     window.addEventListener('resize', () => {
-    const width = mount.clientWidth;
-    const height = mount.clientHeight;
-    this.renderer.setSize(width, height);
-    this.camera.aspect = width / height;
-    this.camera.updateProjectionMatrix();
+      const width = mount.clientWidth;
+      const height = mount.clientHeight;
+      const tanFOV = Math.tan((( Math.PI / 180 ) * this.camera.fov / 2 ));
+      this.camera.aspect = width / height;
+      this.camera.fov = (360 / Math.PI) * Math.atan(tanFOV * (mount.clientHeight / height));
+      this.camera.updateProjectionMatrix();
+      this.camera.lookAt(this.scene.position);
+      this.renderer.setSize(width, height);
+      this.renderer.render(this.scene, this.camera);
   });
  
     //ADD CONTROLS
