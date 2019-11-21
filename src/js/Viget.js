@@ -109,16 +109,12 @@ export default class Viget extends Component {
       for(let p=0; p<20; p++) {
         let cloud = new THREE.Mesh(cloudGeometry, cloudMaterial);
         cloud.position.set(
-          Math.random()*800 -400,
-          Math.random()*500-500,
+          Math.random() * 400 - 100,
+          Math.random() * 400 - 200,
           -200
-          
         );
-        // cloud.rotation.x = 1.16;
-        // cloud.rotation.y = 90;
-        // cloud.rotation.z = 10;
-        //cloud.position.z = -200;
-        cloud.material.opacity = 0.55;
+       
+        cloud.material.opacity = 0.25;
         this.cloudParticles.push(cloud);
         this.scene.add(cloud);
       }
@@ -134,7 +130,30 @@ export default class Viget extends Component {
     this.dz = -.05;
     
     // MAKE WINDOW RESPONSIVE
+    // window.addEventListener('resize', () => {
+    //   const width = mount.clientWidth;
+    //   const height = mount.clientHeight;
+    //   const tanFOV = Math.tan((( Math.PI / 180 ) * this.camera.fov / 2 ));
+    //   this.camera.aspect = width / height;
+    //   this.camera.fov = (360 / Math.PI) * Math.atan(tanFOV * (mount.clientHeight / height));
+    //   this.camera.updateProjectionMatrix();
+    //   this.camera.lookAt(this.scene.position);
+    //   this.renderer.setSize(width, height);
+    //   this.renderer.render(this.scene, this.camera);
+    // });
+    this.resize();
+    this.start();
+  }
+  
+  componentWillUnmount(){
+      const mount = this.mount.current;
+      this.stop();
+      mount.removeChild(this.renderer.domElement);
+  }
+  
+  resize = () => {
     window.addEventListener('resize', () => {
+      const mount = this.mount.current;
       const width = mount.clientWidth;
       const height = mount.clientHeight;
       const tanFOV = Math.tan((( Math.PI / 180 ) * this.camera.fov / 2 ));
@@ -145,14 +164,6 @@ export default class Viget extends Component {
       this.renderer.setSize(width, height);
       this.renderer.render(this.scene, this.camera);
     });
-
-    this.start();
-  }
-  
-  componentWillUnmount(){
-      const mount = this.mount.current;
-      this.stop();
-      mount.removeChild(this.renderer.domElement);
   }
   
   start = () => {
