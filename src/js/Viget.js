@@ -3,7 +3,8 @@ import * as THREE from 'three';
 import '../scss/viget.scss';
 import space from '../images/space.jpg';
 import nebula from '../images/nebula.png';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
+import verano from '../fonts/verano.typeface.json';
 
 export default class Viget extends Component {
 
@@ -16,6 +17,7 @@ export default class Viget extends Component {
     this.init();
     this.createBackground();
     this.createViget();
+    this.createText();
     this.resize();
     this.start();
   }
@@ -46,7 +48,7 @@ export default class Viget extends Component {
       10000
     );
     // Set camera's z position to be further away so it doesn't sit on top of the geometry rendered at (0,0,0).
-    this.camera.position.set(0,0,30);
+    this.camera.position.set(0,0,40);
     
     // LIGHTS
     // Create ambient light and add to scene
@@ -151,6 +153,7 @@ export default class Viget extends Component {
       color: 0x1595BA
     });
     this.bigSphere = new THREE.Mesh(bigSphereGeometry, bigSphereMaterial);
+    this.bigSphere.position.set(0, 5, 0);
     // Add big sphere to scene
     this.scene.add(this.bigSphere);
    
@@ -161,10 +164,34 @@ export default class Viget extends Component {
       color: 0xF16C20
     });
     this.smallSphere = new THREE.Mesh(smallSphereGeometry, smallSphereMaterial);
-    // Set position so small orange sphere can orbit around the big blue sphere
-    this.smallSphere.position.set(7, 5, 0);
+    // Set position so small orange sphere can orbit around big blue sphere
+    this.smallSphere.position.set(7, 10, 0);
     // Add small sphere to scene
     this.scene.add(this.smallSphere);
+  };
+  
+  createText = () => {
+    // TEXT
+    // Create font loader
+    const fontLoader = new THREE.FontLoader();
+    // Use parse instead of load the font since the font is being imported as json and does not need to be loaded with an async call.
+    const font = fontLoader.parse(verano);
+    // Create text geometry with string and options object
+    const textGeometry = new THREE.TextGeometry('viget', {
+      font: font,
+      size: 10,
+      height: 3,
+      curveSegments: 20,
+      bevelEnabled: false
+    } );
+    // Create text material
+    const textMaterial = new THREE.MeshLambertMaterial({
+      color: 0xc4c4c4
+    });
+    // Create text mesh, position it under the animated logo, and add to scene
+    this.text = new THREE.Mesh(textGeometry, textMaterial);
+    this.text.position.set(-15, -10, 0);
+    this.scene.add(this.text);
   };
   
   resize = () => {
