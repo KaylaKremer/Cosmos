@@ -50,7 +50,7 @@ export default class Viget extends Component {
     
     // LIGHTS
     // Create ambient light and add to scene
-    this.ambientLight = new THREE.AmbientLight(0x555555);
+    this.ambientLight = new THREE.AmbientLight(0xf2f2f2);
     this.scene.add(this.ambientLight);
     
     // Create directional light and add to scene
