@@ -3,7 +3,6 @@ import * as THREE from 'three';
 import '../scss/viget.scss';
 import space from '../images/space.jpg';
 import nebula from '../images/nebula.png';
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import verano from '../fonts/verano.typeface.json';
 
 export default class Viget extends Component {
@@ -48,7 +47,7 @@ export default class Viget extends Component {
       10000
     );
     // Set camera's z position to be further away so it doesn't sit on top of the geometry rendered at (0,0,0).
-    this.camera.position.set(0,0,40);
+    this.camera.position.set(0,0,0);
     
     // LIGHTS
     // Create ambient light and add to scene
@@ -80,22 +79,14 @@ export default class Viget extends Component {
     // Set its size to be the whole screen and append it to the DOM
     this.renderer.setSize(width, height);
     mount.appendChild(this.renderer.domElement);
- 
-    // CONTROLS
-    // Add orbit controls to the renderer and enable zoom
-    this.controls = new OrbitControls( this.camera, this.renderer.domElement);
-    this.controls.enableZoom = true;
     
     // ANIMATION VALUES
     // Initialize values to be used when animating the small sphere's orbit around the big sphere
     this.r = 7;
     this.theta = 0;
     this.dTheta = 2 * Math.PI / 1000;
-    
-    // this.sphereVector = new THREE.Vector3(0,0,0);
-    // this.dx = .01;
-    // this.dy = -.01;
-    // this.dz = -.05;
+    this.center = new THREE.Vector3(0,0,0);
+    this.dz = .3;
   };
   
   createBackground = () => {
@@ -233,17 +224,15 @@ export default class Viget extends Component {
     
     
     //Move camera for fly-by effect
-    // this.camera.position.x += this.dx;
-    // this.camera.position.y += this.dy;
-    // this.camera.position.z += this.dz;
+    this.camera.position.z += this.dz;
   
     //Reset camera to original position
-    // if (this.camera.position.z < -100) {
-    //   this.camera.position.set(0,35,70);
-    // }
+    if (this.camera.position.z > 40) {
+      this.camera.position.set(0,0,40);
+    }
     
-    //Have camera always facing the sphere vector at the origin (0,0,0)
-    // this.camera.lookAt(this.sphereVector);
+    //Have camera always facing the center at the origin (0,0,0)
+    this.camera.lookAt(this.center);
     
     // Have small sphere orbit around the big sphere
     this.theta += this.dTheta;
