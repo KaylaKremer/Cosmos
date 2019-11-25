@@ -22,17 +22,11 @@ export default class Viget extends Component {
   }
   
   componentWillUnmount(){
-      const mount = this.mount.current;
       this.stop();
-      mount.removeChild(this.renderer.domElement);
+      this.mount.current.removeChild(this.renderer.domElement);
   }
   
   init = () => {
-    // Store DOM reference as well as its width and height in variables
-    const mount = this.mount.current;
-    const width = mount.clientWidth;
-    const height = mount.clientHeight;
-    
     // SCENE
     // Create new scene with fog
     this.scene = new THREE.Scene();
@@ -42,7 +36,7 @@ export default class Viget extends Component {
     // Create new perspective camera
     this.camera = new THREE.PerspectiveCamera(
       60,
-      width / height,
+      this.mount.current.clientWidth / this.mount.current.clientHeight,
       0.1,
       10000
     );
@@ -77,8 +71,13 @@ export default class Viget extends Component {
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setClearColor(this.scene.fog.color);
     // Set its size to be the whole screen and append it to the DOM
-    this.renderer.setSize(width, height);
-    mount.appendChild(this.renderer.domElement);
+    this.renderer.setSize(this.mount.current.clientWidth, this.mount.current.clientHeight);
+    this.mount.current.appendChild(this.renderer.domElement);
+    
+    // RAYCASTER
+    // Initialize raycaster and 2D mouse vector in order for mouse to interact with 3D objects
+    this.raycaster = new THREE.Raycaster(); 
+    this.mouse = new THREE.Vector2();
     
     // ANIMATION VALUES
     // Initialize values to be used when animating the small sphere's orbit around the big sphere
@@ -88,6 +87,13 @@ export default class Viget extends Component {
     this.center = new THREE.Vector3(0,0,0);
     this.dz = .3;
   };
+  
+  onClick = event => { 
+    // Calculate mouse position in normalized device coordinates
+    // (-1 to +1) for both components
+    this.mouse.x = (event.clientX / this.mount.current.clientWidth) * 2 - 1; 
+    this.mouse.y = - (event.clientY / this.mount.current.clientHeight) * 2 + 1; 
+  } 
   
   createBackground = () => {
     // SPACE BACKGROUND
@@ -156,7 +162,7 @@ export default class Viget extends Component {
     });
     this.smallSphere = new THREE.Mesh(smallSphereGeometry, smallSphereMaterial);
     // Set position so small orange sphere can orbit around big blue sphere
-    this.smallSphere.position.set(7, 10, 0);
+    this.smallSphere.position.set(7, 10, 0); 
     // Add small sphere to scene
     this.scene.add(this.smallSphere);
   };
@@ -182,21 +188,21 @@ export default class Viget extends Component {
     // Create text mesh, position it under the animated logo, and add to scene
     this.text = new THREE.Mesh(textGeometry, textMaterial);
     this.text.position.set(-15, -10, 0);
+    this.text.addEventListener('click', () => {
+      console.log('this.text :', this.text);
+    });
     this.scene.add(this.text);
   };
   
   resize = () => {
     //Make window responsive so animation won't become distorted or clipped on resize
     window.addEventListener('resize', () => {
-      const mount = this.mount.current;
-      const width = mount.clientWidth;
-      const height = mount.clientHeight;
       const tanFOV = Math.tan((( Math.PI / 180 ) * this.camera.fov / 2 ));
-      this.camera.aspect = width / height;
-      this.camera.fov = (360 / Math.PI) * Math.atan(tanFOV * (mount.clientHeight / height));
+      this.camera.aspect = this.mount.current.clientWidth / this.mount.current.clientHeight;
+      this.camera.fov = (360 / Math.PI) * Math.atan(tanFOV * (this.mount.current.clientHeight / this.mount.current.clientHeight));
       this.camera.updateProjectionMatrix();
       this.camera.lookAt(this.scene.position);
-      this.renderer.setSize(width, height);
+      this.renderer.setSize(this.mount.current.clientWidth, this.mount.current.clientHeight);
       this.renderer.render(this.scene, this.camera);
     });
   };
@@ -219,14 +225,10 @@ export default class Viget extends Component {
       nebulaParticle.rotation.z -=0.001;
     });
     
-    //
-    this.bigSphere.rotation.y += .0005;
-    
-    
-    //Move camera for fly-by effect
+    //Move camera for zoom-out effect
     this.camera.position.z += this.dz;
   
-    //Reset camera to original position
+    //Stop camera from zooming out any further once it reaches a position of 40 on z-axis
     if (this.camera.position.z > 40) {
       this.camera.position.set(0,0,40);
     }
@@ -242,11 +244,21 @@ export default class Viget extends Component {
     // Render the scene
     this.renderScene();
     
+    window.addEventListener('click', this.onClick, false); 
+    
     // Create loop to call animate function over and over (60 fps)
     this.frameId = window.requestAnimationFrame(this.animate);
   };
    
   renderScene = () => {
+   // Update the raycaster with the current camera and mouse position
+   this.raycaster.setFromCamera(this.mouse, this.camera); 
+   // calculate objects intersecting the raycaster
+   const intersects = this.raycaster.intersectObjects([this.smallSphere, this.bigSphere]); 
+ 
+   for ( let i = 0; i < intersects.length; i++ ) { 
+     intersects[i].object.material.color.set( 0xff0000 );
+   }
     this.renderer.render(this.scene, this.camera);
   }
   
