@@ -77,20 +77,21 @@ export default class Viget extends Component {
     // RAYCASTER
     // Initialize raycaster and 2D mouse vector in order for mouse to interact with 3D objects
     this.raycaster = new THREE.Raycaster(); 
-    this.mouse = new THREE.Vector2();
+    this.mouse = new THREE.Vector2(-1,-1);
     
     // ANIMATION VALUES
     // Initialize values to be used when animating the small sphere's orbit around the big sphere
     this.r = 7;
     this.theta = 0;
     this.dTheta = 2 * Math.PI / 1000;
-    this.center = new THREE.Vector3(0,0,0);
+    this.center = new THREE.Vector3();
     this.dz = .3;
   };
   
-  onClick = event => { 
+  onMouseClick = event => { 
     // Calculate mouse position in normalized device coordinates
     // (-1 to +1) for both components
+    event.preventDefault();
     this.mouse.x = (event.clientX / this.mount.current.clientWidth) * 2 - 1; 
     this.mouse.y = - (event.clientY / this.mount.current.clientHeight) * 2 + 1; 
   } 
@@ -188,12 +189,9 @@ export default class Viget extends Component {
     // Create text mesh, position it under the animated logo, and add to scene
     this.text = new THREE.Mesh(textGeometry, textMaterial);
     this.text.position.set(-15, -10, 0);
-    this.text.addEventListener('click', () => {
-      console.log('this.text :', this.text);
-    });
     this.scene.add(this.text);
   };
-  
+
   resize = () => {
     //Make window responsive so animation won't become distorted or clipped on resize
     window.addEventListener('resize', () => {
@@ -225,12 +223,14 @@ export default class Viget extends Component {
       nebulaParticle.rotation.z -=0.001;
     });
     
-    //Move camera for zoom-out effect
-    this.camera.position.z += this.dz;
+   
   
     //Stop camera from zooming out any further once it reaches a position of 40 on z-axis
-    if (this.camera.position.z > 40) {
-      this.camera.position.set(0,0,40);
+    if (this.camera.position.z < 45) {
+      //Move camera for zoom-out effect
+      this.camera.position.z += this.dz;
+    } else {
+      this.camera.position.set(0,0,45);
     }
     
     //Have camera always facing the center at the origin (0,0,0)
@@ -244,7 +244,7 @@ export default class Viget extends Component {
     // Render the scene
     this.renderScene();
     
-    window.addEventListener('click', this.onClick, false); 
+    window.addEventListener('click', this.onMouseClick, false); 
     
     // Create loop to call animate function over and over (60 fps)
     this.frameId = window.requestAnimationFrame(this.animate);
@@ -254,11 +254,14 @@ export default class Viget extends Component {
    // Update the raycaster with the current camera and mouse position
    this.raycaster.setFromCamera(this.mouse, this.camera); 
    // calculate objects intersecting the raycaster
-   const intersects = this.raycaster.intersectObjects([this.smallSphere, this.bigSphere]); 
+   const intersects = this.raycaster.intersectObjects([this.smallSphere, this.bigSphere, this.text]); 
  
-   for ( let i = 0; i < intersects.length; i++ ) { 
-     intersects[i].object.material.color.set( 0xff0000 );
+   for (let i = 0; i < intersects.length; i++) { 
+    if (this.camera.position.z === 45) {
+      this.props.displayPopup();
+    }
    }
+    this.mouse = new THREE.Vector2(-1,-1);
     this.renderer.render(this.scene, this.camera);
   }
   
