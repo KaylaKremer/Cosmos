@@ -1,0 +1,165 @@
+@mixin fluid-type($properties, $min-vw, $max-vw, $min-value, $max-value) {
+    @each $property in $properties {
+        #{$property}: $min-value;
+    }
+
+    @media screen and (min-width: $min-vw) {
+        @each $property in $properties {
+            #{$property}: calc(#{$min-value} + #{strip-unit($max-value - $min-value)} * (100vw - #{$min-vw}) / #{strip-unit($max-vw - $min-vw)});
+        }
+    }
+
+    @media screen and (min-width: $max-vw) {
+        @each $property in $properties {
+            #{$property}: $max-value;
+        }
+    }
+}
+
+@function strip-unit($value) {
+    @return $value / ($value * 0 + 1);
+}
+
+@function em($pixels, $context: $default-font-size) {
+    @return #{$pixels/$context}em;
+}
+
+// variables
+:root {
+  --sidebar-width: 100%;
+  --toggler-size: 30px;
+  --toggler-line-number: 3;
+  --toggler-line-size: calc(var(--toggler-size) / (var(--toggler-line-number) + var(--toggler-line-number) - 1));
+  --toggler-offset-left: 10px;
+  --toggler-offset-top: 10px;
+  --toggler-color: #1595BA;
+  --toggler-color-hover: #F16C20;
+}
+
+// same as var(--toggler-line-number)
+$total: 3;
+
+.sidebar,
+.content {
+  transition: all .25s ease-out;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  transform: translateX(calc(var(--sidebar-width) * -1));
+  background:  --toggler-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  height: 100vh;
+  opacity: .5;
+}
+
+.content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.menu {
+  list-style-type: none;
+}
+
+.menu__link {
+  color: white;
+  font-weight: 100;
+  text-decoration: none;
+  font-size: 10vmin;
+  line-height: 15vmin;
+  transition: all .25s ease-out;
+  &:hover,
+  &:focus,
+  &:active {
+    color: --toggler-color-hover;
+  }
+}
+
+.menu-toggler {
+  border-radius: calc(var(--toggler-line-size) / 2);
+  display: block;
+  width: var(--toggler-size);
+  height: var(--toggler-size);
+  position: absolute;
+  top: var(--toggler-offset-top);
+  left: var(--toggler-offset-left);
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.menu-toggler__line {
+  height: var(--toggler-line-size);
+  background: var(--toggler-color-hover);
+  position: absolute;
+  border-radius: calc(var(--toggler-line-size) / 2);
+  left: 0;
+  right: 0;
+  transition: all .25s ease-out;
+  
+  $num: 1;
+  
+  @while $num <= $total {
+    &:nth-child(#{$num}) {
+      top: calc(var(--toggler-line-size) * #{$num} + (var(--toggler-line-size) * (#{$num} - 2)));
+    }
+    $num: $num + 1;
+  }    
+}
+
+.input-toggler {
+  position: absolute;
+  left: -100%;
+  
+  &:focus ~ .menu-toggler {
+    outline: 1px dotted;
+  }
+  
+  &:checked ~ .menu-toggler {    
+    .menu-toggler__line:not(:first-child):not(:last-child) {
+      opacity: 0;
+    }
+    
+    .menu-toggler__line:first-child,
+    .menu-toggler__line:last-child {
+      background-color: var(--toggler-color-hover);
+    }      
+    
+    .menu-toggler__line:first-child {
+      transform: translateY(calc(var(--toggler-line-size) * (var(--toggler-line-number) - 1))) rotate(45deg);
+    }
+    
+    .menu-toggler__line:last-child {
+      transform: translateY(calc(-1 * var(--toggler-line-size) * (var(--toggler-line-number) - 1))) rotate(-45deg);
+    }
+  }
+  
+  &:checked ~ .sidebar {
+    transform: translateX(0);
+    opacity: .98;
+  }
+}
+
+.sb-link {
+  display: flex;
+  height: 50px;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #bb5555;
+  transition: background .3s;
+}
+
+.sb-link:hover,
+.sb-link:focus,
+.sb-link:active {
+  background: #f7f7f7;
+}

@@ -91,7 +91,6 @@ export default class Viget extends Component {
   onMouseClick = event => { 
     // Calculate mouse position in normalized device coordinates
     // (-1 to +1) for both components
-    event.preventDefault();
     this.mouse.x = (event.clientX / this.mount.current.clientWidth) * 2 - 1; 
     this.mouse.y = - (event.clientY / this.mount.current.clientHeight) * 2 + 1; 
   } 
@@ -252,16 +251,15 @@ export default class Viget extends Component {
    
   renderScene = () => {
    // Update the raycaster with the current camera and mouse position
-   this.raycaster.setFromCamera(this.mouse, this.camera); 
-   // calculate objects intersecting the raycaster
-   const intersects = this.raycaster.intersectObjects([this.smallSphere, this.bigSphere, this.text]); 
+  //  this.raycaster.setFromCamera(this.mouse, this.camera); 
+  //  // calculate objects intersecting the raycaster
+  //  const intersects = this.raycaster.intersectObjects([this.smallSphere, this.bigSphere, this.text]); 
  
-   for (let i = 0; i < intersects.length; i++) { 
-    if (this.camera.position.z === 45) {
-      this.props.displayPopup();
-    }
-   }
-    this.mouse = new THREE.Vector2(-1,-1);
+  //  for (let i = 0; i < intersects.length; i++) { 
+  //   if (this.camera.position.z === 45) {
+  //   }
+  //  }
+  //   this.mouse = new THREE.Vector2(-1,-1);
     this.renderer.render(this.scene, this.camera);
   }
   
