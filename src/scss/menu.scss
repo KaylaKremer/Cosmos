@@ -1,30 +1,3 @@
-@mixin fluid-type($properties, $min-vw, $max-vw, $min-value, $max-value) {
-    @each $property in $properties {
-        #{$property}: $min-value;
-    }
-
-    @media screen and (min-width: $min-vw) {
-        @each $property in $properties {
-            #{$property}: calc(#{$min-value} + #{strip-unit($max-value - $min-value)} * (100vw - #{$min-vw}) / #{strip-unit($max-vw - $min-vw)});
-        }
-    }
-
-    @media screen and (min-width: $max-vw) {
-        @each $property in $properties {
-            #{$property}: $max-value;
-        }
-    }
-}
-
-@function strip-unit($value) {
-    @return $value / ($value * 0 + 1);
-}
-
-@function em($pixels, $context: $default-font-size) {
-    @return #{$pixels/$context}em;
-}
-
-// variables
 :root {
   --sidebar-width: 100%;
   --toggler-size: 30px;
@@ -32,11 +5,10 @@
   --toggler-line-size: calc(var(--toggler-size) / (var(--toggler-line-number) + var(--toggler-line-number) - 1));
   --toggler-offset-left: 10px;
   --toggler-offset-top: 10px;
-  --toggler-color: #1595BA;
-  --toggler-color-hover: #F16C20;
+ --blue: #1595BA;
+ --orange: #F16C20;
 }
 
-// same as var(--toggler-line-number)
 $total: 3;
 
 .sidebar,
@@ -45,16 +17,15 @@ $total: 3;
 }
 
 .sidebar {
-  width: var(--sidebar-width);
-  transform: translateX(calc(var(--sidebar-width) * -1));
-  background:  --toggler-color;
+  width: 100%;
+  transform: translateX(calc(100% * -1));
+  background-color: var(--blue);
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
   top: 0;
   height: 100vh;
-  opacity: .5;
 }
 
 .content {
@@ -79,7 +50,7 @@ $total: 3;
   &:hover,
   &:focus,
   &:active {
-    color: --toggler-color-hover;
+    color:--orange;
   }
 }
 
@@ -97,7 +68,7 @@ $total: 3;
 
 .menu-toggler__line {
   height: var(--toggler-line-size);
-  background: var(--toggler-color-hover);
+  background: var(--orange);
   position: absolute;
   border-radius: calc(var(--toggler-line-size) / 2);
   left: 0;
@@ -105,7 +76,6 @@ $total: 3;
   transition: all .25s ease-out;
   
   $num: 1;
-  
   @while $num <= $total {
     &:nth-child(#{$num}) {
       top: calc(var(--toggler-line-size) * #{$num} + (var(--toggler-line-size) * (#{$num} - 2)));
@@ -129,7 +99,7 @@ $total: 3;
     
     .menu-toggler__line:first-child,
     .menu-toggler__line:last-child {
-      background-color: var(--toggler-color-hover);
+      background-color: var(--orange);
     }      
     
     .menu-toggler__line:first-child {
@@ -154,7 +124,7 @@ $total: 3;
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  color: #bb5555;
+  color: var(--orange);
   transition: background .3s;
 }
 

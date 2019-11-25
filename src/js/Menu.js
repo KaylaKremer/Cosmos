@@ -15,7 +15,8 @@ export default class Menu extends Component {
                 <span className="menu-toggler__line"></span>
                 <span className="menu-toggler__line"></span>
               </label>
-              <nav id="sidebar" className="sidebar" role="navigation">
+              <nav id="sidebar" className="sidebar">
+                <div>Check out Kayla's Stuff!</div>
                 <ul id="menubar" className="menu">
                   <li className="menu__item"><a className="menu__link" href="#">Home</a></li>
                   <li className="menu__item"><a className="menu__link" href="#">Blog</a></li>
