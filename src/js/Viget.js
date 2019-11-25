@@ -192,7 +192,7 @@ export default class Viget extends Component {
   };
 
   resize = () => {
-    //Make window responsive so animation won't become distorted or clipped on resize
+    // Make window responsive so animation won't become distorted or clipped on resize
     window.addEventListener('resize', () => {
       const tanFOV = Math.tan((( Math.PI / 180 ) * this.camera.fov / 2 ));
       this.camera.aspect = this.mount.current.clientWidth / this.mount.current.clientHeight;
@@ -221,18 +221,16 @@ export default class Viget extends Component {
     this.nebulaParticles.forEach(nebulaParticle => {
       nebulaParticle.rotation.z -=0.001;
     });
-    
-   
   
-    //Stop camera from zooming out any further once it reaches a position of 40 on z-axis
     if (this.camera.position.z < 45) {
-      //Move camera for zoom-out effect
+      // Move camera for zoom-out effect on z-axis
       this.camera.position.z += this.dz;
     } else {
+      // Stop camera from zooming out any further once it reaches a position of 45 on z-axis
       this.camera.position.set(0,0,45);
     }
     
-    //Have camera always facing the center at the origin (0,0,0)
+    // Have camera always facing the center at the origin (0,0,0)
     this.camera.lookAt(this.center);
     
     // Have small sphere orbit around the big sphere
@@ -243,29 +241,31 @@ export default class Viget extends Component {
     // Render the scene
     this.renderScene();
     
-    window.addEventListener('click', this.onMouseClick, false); 
+    // Add mouse click event listener so user can click on 3D objects in the scene
+    window.addEventListener('click', this.onMouseClick, false);
     
     // Create loop to call animate function over and over (60 fps)
     this.frameId = window.requestAnimationFrame(this.animate);
   };
    
   renderScene = () => {
-   // Update the raycaster with the current camera and mouse position
-  //  this.raycaster.setFromCamera(this.mouse, this.camera); 
-  //  // calculate objects intersecting the raycaster
-  //  const intersects = this.raycaster.intersectObjects([this.smallSphere, this.bigSphere, this.text]); 
- 
-  //  for (let i = 0; i < intersects.length; i++) { 
-  //   if (this.camera.position.z === 45) {
-  //   }
-  //  }
-  //   this.mouse = new THREE.Vector2(-1,-1);
+    if (this.camera.position.z === 45 && !this.props.menu) {
+      // Update the raycaster with the current camera and mouse position
+      this.raycaster.setFromCamera(this.mouse, this.camera);
+      // Calculate objects intersecting the raycaster
+      const intersects = this.raycaster.intersectObjects([this.smallSphere, this.bigSphere, this.text]);
+       for (let i = 0; i < intersects.length; i++) {
+          console.log('hit');
+       }
+      this.mouse = new THREE.Vector2(-1,-1);
+    }
     this.renderer.render(this.scene, this.camera);
   }
   
   render(){
       return(
-        <div className="viget"
+        <div
+          className="viget"
           ref={this.mount}
         />
       )

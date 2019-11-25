@@ -4,22 +4,12 @@ import '../scss/menu.scss';
 export default class Menu extends Component {
     constructor(props) {
         super(props);
-        this.state  = {
-            menu: true
-        };
     }
       
-    toggleMenu = () => {
-        console.log('click');
-        this.setState({
-            menu: !this.state.menu
-        });
-    };
-    
     render() {
         return (
             <div className="menu-container">
-              <input type="checkbox" id="menuToggler" className="input-toggler" defaultChecked={this.state.menu} onChange={this.toggleMenu} />
+              <input type="checkbox" id="menuToggler" className="input-toggler" defaultChecked={this.props.menu} onChange={this.props.toggleMenu} />
               <label htmlFor="menuToggler" id="menuTogglerLabel" className="menu-toggler">
                 <span className="menu-toggler__line"></span>
                 <span className="menu-toggler__line"></span>
