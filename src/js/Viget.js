@@ -3,7 +3,6 @@ import * as THREE from 'three';
 import '../scss/viget.scss';
 import space from '../images/space.jpg';
 import nebula from '../images/nebula.png';
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import verano from '../fonts/verano.typeface.json';
 
 export default class Viget extends Component {
@@ -23,17 +22,11 @@ export default class Viget extends Component {
   }
   
   componentWillUnmount(){
-      const mount = this.mount.current;
       this.stop();
-      mount.removeChild(this.renderer.domElement);
+      this.mount.current.removeChild(this.renderer.domElement);
   }
   
   init = () => {
-    // Store DOM reference as well as its width and height in variables
-    const mount = this.mount.current;
-    const width = mount.clientWidth;
-    const height = mount.clientHeight;
-    
     // SCENE
     // Create new scene with fog
     this.scene = new THREE.Scene();
@@ -43,12 +36,12 @@ export default class Viget extends Component {
     // Create new perspective camera
     this.camera = new THREE.PerspectiveCamera(
       60,
-      width / height,
+      this.mount.current.clientWidth / this.mount.current.clientHeight,
       0.1,
       10000
     );
     // Set camera's z position to be further away so it doesn't sit on top of the geometry rendered at (0,0,0).
-    this.camera.position.set(0,0,40);
+    this.camera.position.set(0,0,0);
     
     // LIGHTS
     // Create ambient light and add to scene
@@ -78,25 +71,30 @@ export default class Viget extends Component {
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setClearColor(this.scene.fog.color);
     // Set its size to be the whole screen and append it to the DOM
-    this.renderer.setSize(width, height);
-    mount.appendChild(this.renderer.domElement);
- 
-    // CONTROLS
-    // Add orbit controls to the renderer and enable zoom
-    this.controls = new OrbitControls( this.camera, this.renderer.domElement);
-    this.controls.enableZoom = true;
+    this.renderer.setSize(this.mount.current.clientWidth, this.mount.current.clientHeight);
+    this.mount.current.appendChild(this.renderer.domElement);
+    
+    // RAYCASTER
+    // Initialize raycaster and 2D mouse vector in order for mouse to interact with 3D objects
+    this.raycaster = new THREE.Raycaster(); 
+    this.mouse = new THREE.Vector2(-1,-1);
     
     // ANIMATION VALUES
     // Initialize values to be used when animating the small sphere's orbit around the big sphere
     this.r = 7;
     this.theta = 0;
     this.dTheta = 2 * Math.PI / 1000;
-    
-    // this.sphereVector = new THREE.Vector3(0,0,0);
-    // this.dx = .01;
-    // this.dy = -.01;
-    // this.dz = -.05;
+    this.center = new THREE.Vector3();
+    this.dz = .3;
   };
+  
+  onMouseClick = event => { 
+    // Calculate mouse position in normalized device coordinates
+    // (-1 to +1) for both components
+    event.preventDefault();
+    this.mouse.x = (event.clientX / this.mount.current.clientWidth) * 2 - 1; 
+    this.mouse.y = - (event.clientY / this.mount.current.clientHeight) * 2 + 1; 
+  } 
   
   createBackground = () => {
     // SPACE BACKGROUND
@@ -165,7 +163,7 @@ export default class Viget extends Component {
     });
     this.smallSphere = new THREE.Mesh(smallSphereGeometry, smallSphereMaterial);
     // Set position so small orange sphere can orbit around big blue sphere
-    this.smallSphere.position.set(7, 10, 0);
+    this.smallSphere.position.set(7, 10, 0); 
     // Add small sphere to scene
     this.scene.add(this.smallSphere);
   };
@@ -193,19 +191,16 @@ export default class Viget extends Component {
     this.text.position.set(-15, -10, 0);
     this.scene.add(this.text);
   };
-  
+
   resize = () => {
     //Make window responsive so animation won't become distorted or clipped on resize
     window.addEventListener('resize', () => {
-      const mount = this.mount.current;
-      const width = mount.clientWidth;
-      const height = mount.clientHeight;
       const tanFOV = Math.tan((( Math.PI / 180 ) * this.camera.fov / 2 ));
-      this.camera.aspect = width / height;
-      this.camera.fov = (360 / Math.PI) * Math.atan(tanFOV * (mount.clientHeight / height));
+      this.camera.aspect = this.mount.current.clientWidth / this.mount.current.clientHeight;
+      this.camera.fov = (360 / Math.PI) * Math.atan(tanFOV * (this.mount.current.clientHeight / this.mount.current.clientHeight));
       this.camera.updateProjectionMatrix();
       this.camera.lookAt(this.scene.position);
-      this.renderer.setSize(width, height);
+      this.renderer.setSize(this.mount.current.clientWidth, this.mount.current.clientHeight);
       this.renderer.render(this.scene, this.camera);
     });
   };
@@ -228,22 +223,18 @@ export default class Viget extends Component {
       nebulaParticle.rotation.z -=0.001;
     });
     
-    //
-    this.bigSphere.rotation.y += .0005;
-    
-    
-    //Move camera for fly-by effect
-    // this.camera.position.x += this.dx;
-    // this.camera.position.y += this.dy;
-    // this.camera.position.z += this.dz;
+   
   
-    //Reset camera to original position
-    // if (this.camera.position.z < -100) {
-    //   this.camera.position.set(0,35,70);
-    // }
+    //Stop camera from zooming out any further once it reaches a position of 40 on z-axis
+    if (this.camera.position.z < 45) {
+      //Move camera for zoom-out effect
+      this.camera.position.z += this.dz;
+    } else {
+      this.camera.position.set(0,0,45);
+    }
     
-    //Have camera always facing the sphere vector at the origin (0,0,0)
-    // this.camera.lookAt(this.sphereVector);
+    //Have camera always facing the center at the origin (0,0,0)
+    this.camera.lookAt(this.center);
     
     // Have small sphere orbit around the big sphere
     this.theta += this.dTheta;
@@ -253,11 +244,24 @@ export default class Viget extends Component {
     // Render the scene
     this.renderScene();
     
+    window.addEventListener('click', this.onMouseClick, false); 
+    
     // Create loop to call animate function over and over (60 fps)
     this.frameId = window.requestAnimationFrame(this.animate);
   };
    
   renderScene = () => {
+   // Update the raycaster with the current camera and mouse position
+   this.raycaster.setFromCamera(this.mouse, this.camera); 
+   // calculate objects intersecting the raycaster
+   const intersects = this.raycaster.intersectObjects([this.smallSphere, this.bigSphere, this.text]); 
+ 
+   for (let i = 0; i < intersects.length; i++) { 
+    if (this.camera.position.z === 45) {
+      this.props.displayPopup();
+    }
+   }
+    this.mouse = new THREE.Vector2(-1,-1);
     this.renderer.render(this.scene, this.camera);
   }
   
