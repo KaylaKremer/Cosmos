@@ -1,7 +1,18 @@
 {
   "name": "Viget",
   "version": "0.1.0",
+  "description": "Small React & THREE.js portfolio app using the Viget logo!",
   "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KaylaKremer/Viget.git"
+  },
+  "author": "Kayla Kremer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KaylaKremer/Viget/issues"
+  },
+  "homepage": "https://github.com/KaylaKremer/Viget#readme",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
     "@fortawesome/free-brands-svg-icons": "^5.11.2",
@@ -35,5 +46,9 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "keywords": [
+    "THREE.js",
+    "React",
+    "Font Awesome"
+  ]
 }
