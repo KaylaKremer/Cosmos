@@ -52,7 +52,7 @@ $total: 3;
     margin: 0 1rem;
 }
 
-.menu__link {
+.menu-link {
     color: var(--white);
     font-weight: 100;
     text-decoration: none;
@@ -85,7 +85,7 @@ $total: 3;
   z-index: 1000;
 }
 
-.menu-toggler__line {
+.menu-toggler-line {
   height: var(--toggler-line-size);
   background: var(--white);
   position: absolute;
@@ -108,20 +108,20 @@ $total: 3;
   left: -100%;
   
   &:checked ~ .menu-toggler {    
-    .menu-toggler__line:not(:first-child):not(:last-child) {
+    .menu-toggler-line:not(:first-child):not(:last-child) {
       opacity: 0;
     }
     
-    .menu-toggler__line:first-child,
-    .menu-toggler__line:last-child {
+    .menu-toggler-line:first-child,
+    .menu-toggler-line:last-child {
       background-color: var(--white);
     }      
     
-    .menu-toggler__line:first-child {
+    .menu-toggler-line:first-child {
       transform: translateY(calc(var(--toggler-line-size) * (var(--toggler-line-number) - 1))) rotate(45deg);
     }
     
-    .menu-toggler__line:last-child {
+    .menu-toggler-line:last-child {
       transform: translateY(calc(-1 * var(--toggler-line-size) * (var(--toggler-line-number) - 1))) rotate(-45deg);
     }
   }
@@ -177,7 +177,7 @@ $total: 3;
     .image {
         width: 300px;
     }
-    .menu__link {
+    .menu-link {
         font-size: 4rem;
     }
     .image-container {
@@ -195,7 +195,7 @@ $total: 3;
     .image {
         width: 250px;
     }
-    .menu__link {
+    .menu-link {
         font-size: 3rem;
     }
     .image-container {
