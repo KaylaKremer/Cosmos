@@ -48,21 +48,20 @@ export default class Viget extends Component {
     // Create ambient light and add to scene
     this.ambientLight = new THREE.AmbientLight(0xf2f2f2);
     this.scene.add(this.ambientLight);
-    
     // Create directional light and add to scene
     this.directionalLight = new THREE.DirectionalLight(0xff8c19);
     this.directionalLight.position.set(0,0,1);
     this.scene.add(this.directionalLight);
-    
-    // Create three spotlights (red, pink, and purple) to add color variety to nebula texture and add all to scene
+    // Create three spotlights to add color variety to nebula texture and add all to scene
+    // Red light
     this.redLight = new THREE.PointLight(0xef1039,10,550,2);
     this.redLight.position.set(-50,100,-150);
     this.scene.add(this.redLight);
-    
+    // Pink light
     this.pinkLight = new THREE.PointLight(0xef56dd,10,450,2);
     this.pinkLight.position.set(-150,150,-150);
     this.scene.add(this.pinkLight);
-    
+    // Purple light
     this.purpleLight = new THREE.PointLight(0xcf6df9,10,550,2);
     this.purpleLight.position.set(-100,200,-150);
     this.scene.add(this.purpleLight);
@@ -222,7 +221,6 @@ export default class Viget extends Component {
     this.nebulaParticles.forEach(nebulaParticle => {
       nebulaParticle.rotation.z -=0.001;
     });
-  
     if (this.camera.position.z < 45) {
       // Move camera for zoom-out effect on z-axis
       this.camera.position.z += this.dz;
@@ -230,21 +228,16 @@ export default class Viget extends Component {
       // Stop camera from zooming out any further once it reaches a position of 45 on z-axis
       this.camera.position.set(0,0,45);
     }
-    
     // Have camera always facing the center at the origin (0,0,0)
     this.camera.lookAt(this.center);
-    
     // Have small sphere orbit around the big sphere
     this.theta += this.dTheta;
     this.smallSphere.position.x = this.r * Math.cos(this.theta);
     this.smallSphere.position.z = this.r * Math.sin(this.theta);
-    
     // Render the scene
     this.renderScene();
-    
     // Add mouse click event listener so user can click on 3D objects in the scene
     window.addEventListener('click', this.onMouseClick, false);
-    
     // Create loop to call animate function over and over (60 fps)
     this.frameId = window.requestAnimationFrame(this.animate);
   };
@@ -256,11 +249,15 @@ export default class Viget extends Component {
       this.raycaster.setFromCamera(this.mouse, this.camera);
       // Calculate objects intersecting the raycaster
       const intersects = this.raycaster.intersectObjects([this.smallSphere, this.bigSphere, this.text]);
-       for (let i = 0; i < intersects.length; i++) {
-          console.log('hit');
-       }
+       // Loop through the intersects array 
+      for (let i = 0; i < intersects.length; i++) {
+          // If there are any 3D objects the user's mouse intersected with, change that object's color to a random color
+          intersects[i].object.material.color.setRGB(Math.random(), Math.random(), Math.random());
+      }
+      // Reset mouse's vector again to (-1, -1) so user can click on any object again
       this.mouse = new THREE.Vector2(-1,-1);
     }
+    // Render with scene and camera
     this.renderer.render(this.scene, this.camera);
   }
   
