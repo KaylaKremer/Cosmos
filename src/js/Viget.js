@@ -48,21 +48,20 @@ export default class Viget extends Component {
     // Create ambient light and add to scene
     this.ambientLight = new THREE.AmbientLight(0xf2f2f2);
     this.scene.add(this.ambientLight);
-    
     // Create directional light and add to scene
     this.directionalLight = new THREE.DirectionalLight(0xff8c19);
     this.directionalLight.position.set(0,0,1);
     this.scene.add(this.directionalLight);
-    
-    // Create three spotlights (red, pink, and purple) to add color variety to nebula texture and add all to scene
+    // Create three spotlights to add color variety to nebula texture and add all to scene
+    // Red light
     this.redLight = new THREE.PointLight(0xef1039,10,550,2);
     this.redLight.position.set(-50,100,-150);
     this.scene.add(this.redLight);
-    
+    // Pink light
     this.pinkLight = new THREE.PointLight(0xef56dd,10,450,2);
     this.pinkLight.position.set(-150,150,-150);
     this.scene.add(this.pinkLight);
-    
+    // Purple light
     this.purpleLight = new THREE.PointLight(0xcf6df9,10,550,2);
     this.purpleLight.position.set(-100,200,-150);
     this.scene.add(this.purpleLight);
