@@ -1,26 +1,26 @@
 import React, {Component} from 'react';
 import Viget from './Viget';
-import Popup from './Popup';
+import Menu from './Menu';
 import '../scss/app.scss';
 
 export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state  = {
+        menu: false
+    };
+}
   
-  state = {
-    popup: false
-  };
-  
-  displayPopup = () => {
+toggleMenu = () => {
     this.setState({
-      popup: !this.state.popup
+        menu: !this.state.menu
     });
-  };
-  
+};
   render() {
-    const {popup} = this.state;
     return (
       <div className="App">
-        <Viget displayPopup={this.displayPopup} />
-        <Popup popup={popup}/>
+        <Viget menu={this.state.menu} />
+        <Menu menu={this.state.menu} toggleMenu={this.toggleMenu} />
       </div>
     );
   }
