@@ -16,7 +16,7 @@ const Menu = props => {
           </label>
           <nav id="sidebar" className="sidebar">
             <div className="image-container">
-                <img className="image" src={kayla} />
+                <img alt="Kayla Kremer" className="image" src={kayla} />
                 <span className="name">Kayla Kremer</span>
             </div>
             <div className="menubar-container">
