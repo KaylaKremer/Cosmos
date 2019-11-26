@@ -24,7 +24,7 @@ const Menu = props => {
                     <li className="menu-item"><a className="menu-link" target="_blank" rel="noopener noreferrer" href="https://github.com/KaylaKremer"><FontAwesomeIcon icon={faGithub} /> GitHub</a></li>
                     <li className="menu-item"><a className="menu-link" target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/kaylakremer/"><FontAwesomeIcon icon={faLinkedin} /> LinkedIn</a></li>
                     <li className="menu-item"><a className="menu-link" target="_blank" rel="noopener noreferrer" href="https://www.kaylakremer.com/"><FontAwesomeIcon icon={faPalette} /> Portfolio</a></li>
-                    <li className="menu-item"><a className="menu-link" target="_blank" rel="noopener noreferrer" href="https://twitter.com/home"><FontAwesomeIcon icon={faTwitter} /> Twitter</a></li>
+                    <li className="menu-item"><a className="menu-link" target="_blank" rel="noopener noreferrer" href="https://twitter.com/Kayla_Kremer"><FontAwesomeIcon icon={faTwitter} /> Twitter</a></li>
                     <li className="menu-item"><a className="menu-link" href="mailto:kremer.kayla@gmail.com"><FontAwesomeIcon icon={faEnvelope} /> Contact</a></li>
                 </ul>
             </div>
