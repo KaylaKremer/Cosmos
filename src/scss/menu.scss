@@ -19,11 +19,13 @@ $total: 3;
   transform: translateX(calc(100% * -1));
   background-color: var(--blue);
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   position: absolute;
   top: 0;
   height: 100vh;
+  overflow-y: scroll;
 }
 
 .content {
@@ -34,24 +36,41 @@ $total: 3;
   flex-direction: column;
 }
 
+.menubar-container {
+    margin-top: 5rem;
+    margin-left: 2rem;
+}
+
 .menu {
-  list-style-type: none;
+    list-style-type: none;
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    padding-inline-start: 0;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin: 0 1rem;
 }
 
 .menu__link {
-  color: var(--white);
-  font-weight: 100;
-  text-decoration: none;
-  font-size: 10vmin;
-  line-height: 15vmin;
-  transition: all .25s ease-out;
-  padding: 10px;
-  border-radius: 5px;
-  &:hover,
-  &:focus,
-  &:active {
-    background-color: var(--orange);
-  }
+    color: var(--white);
+    font-weight: 100;
+    text-decoration: none;
+    font-size: 5rem;
+    transition: all .25s ease-out;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    &:hover,
+    &:focus,
+    &:active {
+        background-color: var(--orange);
+    }
+    svg {
+        margin-right: 15px;
+    }
 }
 
 .menu-toggler {
@@ -110,4 +129,76 @@ $total: 3;
   &:checked ~ .sidebar {
     transform: translateX(0);
   }
+}
+
+.image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5rem;
+}
+    
+.image {
+    width: 450px;
+    border-radius: 50%;
+}
+    
+.name {
+    color: var(--white);
+    background-color: var(--orange);
+    font-weight: 300;
+    text-decoration: none;
+    font-size: 4rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    padding-bottom: 0.5rem;
+}
+
+
+@media screen and (max-width: 900px) {
+    .sidebar {
+        flex-direction: column;
+    }
+    .image-container {
+        margin-top: 40rem;
+    }
+    .menubar-container {
+        margin-bottom: 2rem;
+        margin-top: 2rem;
+        margin-left: 0;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .image {
+        width: 300px;
+    }
+    .menu__link {
+        font-size: 4rem;
+    }
+    .image-container {
+        margin-top: 25rem;
+    }
+    .name {
+        font-size: 3rem;
+    }
+}
+
+@media screen and (max-width: 375px) {
+    .name {
+        font-size: 2.5rem;
+    }
+    .image {
+        width: 250px;
+    }
+    .menu__link {
+        font-size: 3rem;
+    }
+    .image-container {
+        margin-top: 18rem;
+    }
 }

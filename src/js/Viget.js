@@ -22,6 +22,7 @@ export default class Viget extends Component {
   }
   
   componentWillUnmount(){
+      // Stops the animation and removes the renderer from the DOM
       this.stop();
       this.mount.current.removeChild(this.renderer.domElement);
   }
@@ -249,6 +250,7 @@ export default class Viget extends Component {
   };
    
   renderScene = () => {
+    // Only allow user to click on 3D objects when camera has stopped moving and menu isn't opened
     if (this.camera.position.z === 45 && !this.props.menu) {
       // Update the raycaster with the current camera and mouse position
       this.raycaster.setFromCamera(this.mouse, this.camera);
