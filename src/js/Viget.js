@@ -147,7 +147,7 @@ export default class Viget extends Component {
     // Create sphere mesh with new geometry and material
     const bigSphereGeometry = new THREE.SphereGeometry(5, 50, 50);
     const bigSphereMaterial = new THREE.MeshLambertMaterial({
-      color: 0x1595BA
+      color: 0x1395ba
     });
     this.bigSphere = new THREE.Mesh(bigSphereGeometry, bigSphereMaterial);
     this.bigSphere.position.set(0, 5, 0);
@@ -158,7 +158,7 @@ export default class Viget extends Component {
     // Create sphere mesh with new geometry and material
     const smallSphereGeometry = new THREE.SphereGeometry(2, 50,50);
     const smallSphereMaterial = new THREE.MeshLambertMaterial({
-      color: 0xF16C20
+      color: 0xe57201
     });
     this.smallSphere = new THREE.Mesh(smallSphereGeometry, smallSphereMaterial);
     // Set position so small orange sphere can orbit around big blue sphere
