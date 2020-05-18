@@ -14,7 +14,7 @@ export default class Scene extends Component {
     this.init();
     this.createBackground();
     this.createScene();
-    this.createText();
+    // this.createText();
     this.resize();
     this.start();
   }
@@ -169,29 +169,29 @@ export default class Scene extends Component {
     this.scene.add(this.smallSphere);
   };
   
-  createText = () => {
-    // TEXT
-    // Create font loader
-    const fontLoader = new THREE.FontLoader();
-    // Use parse instead of load the font since the font is being imported as json and does not need to be loaded with an async call.
-    const font = fontLoader.parse(verano);
-    // Create text geometry with string and options object
-    const textGeometry = new THREE.TextGeometry('Space', {
-      font,
-      size: 10,
-      height: 3,
-      curveSegments: 20,
-      bevelEnabled: false
-    } );
-    // Create text material
-    const textMaterial = new THREE.MeshLambertMaterial({
-      color: 0xc4c4c4
-    });
-    // Create text mesh, position it under the animated logo, and add to scene
-    this.text = new THREE.Mesh(textGeometry, textMaterial);
-    this.text.position.set(-15, -10, 0);
-    this.scene.add(this.text);
-  };
+  // createText = () => {
+  //   // TEXT
+  //   // Create font loader
+  //   const fontLoader = new THREE.FontLoader();
+  //   // Use parse instead of load the font since the font is being imported as json and does not need to be loaded with an async call.
+  //   const font = fontLoader.parse(verano);
+  //   // Create text geometry with string and options object
+  //   const textGeometry = new THREE.TextGeometry('Space', {
+  //     font,
+  //     size: 10,
+  //     height: 3,
+  //     curveSegments: 20,
+  //     bevelEnabled: false
+  //   } );
+  //   // Create text material
+  //   const textMaterial = new THREE.MeshLambertMaterial({
+  //     color: 0xc4c4c4
+  //   });
+  //   // Create text mesh, position it under the animated logo, and add to scene
+  //   this.text = new THREE.Mesh(textGeometry, textMaterial);
+  //   this.text.position.set(-15, -10, 0);
+  //   this.scene.add(this.text);
+  // };
 
   resize = () => {
     // Make window responsive so animation won't become distorted or clipped on resize
@@ -250,14 +250,15 @@ export default class Scene extends Component {
       // Update the raycaster with the current camera and mouse position
       this.raycaster.setFromCamera(this.mouse, this.camera);
       // Calculate objects intersecting the raycaster
-      const intersects = this.raycaster.intersectObjects([this.smallSphere, this.bigSphere, this.text]);
+       // const intersects = this.raycaster.intersectObjects([this.smallSphere, this.bigSphere, this.text]);
+       const intersects = this.raycaster.intersectObjects([this.smallSphere, this.bigSphere]);
        // Loop through the intersects array 
       for (let i = 0; i < intersects.length; i++) {
           // If there are any 3D objects the user's mouse intersected with, change that object's color to a random color
           intersects[i].object.material.color.setRGB(Math.random(), Math.random(), Math.random());
       }
       // Reset mouse's vector again to (-1, -1) so user can click on any object again
-      this.mouse = new THREE.Vector2(-1,-1);
+      this.mouse = new THREE.Vector2(-1, -1);
     }
     // Render with scene and camera
     this.renderer.render(this.scene, this.camera);
