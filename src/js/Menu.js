@@ -3,7 +3,6 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faGithub, faLinkedin, faTwitter} from '@fortawesome/free-brands-svg-icons';
 import {faPalette, faEnvelope} from '@fortawesome/free-solid-svg-icons';
 import '../scss/menu.scss';
-import kayla from '../images/kayla.jpg';
 import logo from '../images/logo.png';
   
 const Menu = props => {
