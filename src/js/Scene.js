@@ -1,27 +1,25 @@
 import React, { Component } from 'react';
 import * as THREE from 'three';
-import '../scss/viget.scss';
+import PropTypes from 'prop-types';
+import '../scss/scene.scss';
 import space from '../images/space.jpg';
 import nebula from '../images/nebula.png';
 import verano from '../fonts/verano.typeface.json';
 
-export default class Viget extends Component {
-
-  constructor(props) {
-    super(props);
-    this.mount = React.createRef();
-  }
+export default class Scene extends Component {
   
-  componentDidMount(){
+  mount = React.createRef();
+  
+  componentDidMount() {
     this.init();
     this.createBackground();
-    this.createViget();
+    this.createScene();
     this.createText();
     this.resize();
     this.start();
   }
   
-  componentWillUnmount(){
+  componentWillUnmount() {
       // Stops the animation and removes the renderer from the DOM
       this.stop();
       this.mount.current.removeChild(this.renderer.domElement);
@@ -42,16 +40,18 @@ export default class Viget extends Component {
       10000
     );
     // Set camera's z position to be further away so it doesn't sit on top of the geometry rendered at (0,0,0).
-    this.camera.position.set(0,0,0);
+    this.camera.position.set(0, 0, 0);
     
     // LIGHTS
     // Create ambient light and add to scene
     this.ambientLight = new THREE.AmbientLight(0xf2f2f2);
     this.scene.add(this.ambientLight);
+    
     // Create directional light and add to scene
     this.directionalLight = new THREE.DirectionalLight(0xff8c19);
     this.directionalLight.position.set(0,0,1);
     this.scene.add(this.directionalLight);
+    
     // Create three spotlights to add color variety to nebula texture and add all to scene
     // Red light
     this.redLight = new THREE.PointLight(0xef1039,10,550,2);
@@ -70,6 +70,7 @@ export default class Viget extends Component {
     // Create renderer and set its color to same as the fog
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setClearColor(this.scene.fog.color);
+    
     // Set its size to be the whole screen and append it to the DOM
     this.renderer.setSize(this.mount.current.clientWidth, this.mount.current.clientHeight);
     this.mount.current.appendChild(this.renderer.domElement);
@@ -77,7 +78,7 @@ export default class Viget extends Component {
     // RAYCASTER
     // Initialize raycaster and 2D mouse vector in order for mouse to interact with 3D objects
     this.raycaster = new THREE.Raycaster(); 
-    this.mouse = new THREE.Vector2(-1,-1);
+    this.mouse = new THREE.Vector2(-1, -1);
     
     // ANIMATION VALUES
     // Initialize values to be used when animating the small sphere's orbit around the big sphere
@@ -99,6 +100,7 @@ export default class Viget extends Component {
     // SPACE BACKGROUND
     // Create loader to load space texture
     const loader = new THREE.TextureLoader();
+    
     // Load space texture and have it wrap with repeating enabled
     loader.load(space, texture => {
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
@@ -142,7 +144,7 @@ export default class Viget extends Component {
     });
   };
   
-  createViget = () => {
+  createScene = () => {
     // BIG BLUE SPHERE
     // Create sphere mesh with new geometry and material
     const bigSphereGeometry = new THREE.SphereGeometry(5, 50, 50);
@@ -174,8 +176,8 @@ export default class Viget extends Component {
     // Use parse instead of load the font since the font is being imported as json and does not need to be loaded with an async call.
     const font = fontLoader.parse(verano);
     // Create text geometry with string and options object
-    const textGeometry = new THREE.TextGeometry('viget', {
-      font: font,
+    const textGeometry = new THREE.TextGeometry('Space', {
+      font,
       size: 10,
       height: 3,
       curveSegments: 20,
@@ -219,14 +221,14 @@ export default class Viget extends Component {
   animate = () => {
     //Rotate nebula particles so they appear floating
     this.nebulaParticles.forEach(nebulaParticle => {
-      nebulaParticle.rotation.z -=0.001;
+      nebulaParticle.rotation.z -= 0.001;
     });
     if (this.camera.position.z < 45) {
       // Move camera for zoom-out effect on z-axis
       this.camera.position.z += this.dz;
     } else {
       // Stop camera from zooming out any further once it reaches a position of 45 on z-axis
-      this.camera.position.set(0,0,45);
+      this.camera.position.set(0, 0, 45);
     }
     // Have camera always facing the center at the origin (0,0,0)
     this.camera.lookAt(this.center);
@@ -261,12 +263,17 @@ export default class Viget extends Component {
     this.renderer.render(this.scene, this.camera);
   }
   
-  render(){
-      return(
+  render() {
+      return (
         <div
-          className="viget"
+          className="scene"
           ref={this.mount}
         />
-      )
+      );
     }
 }
+
+Scene.propTypes = {
+  menu: PropTypes.bool
+};
+

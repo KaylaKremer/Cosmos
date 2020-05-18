@@ -1,29 +1,29 @@
 import React, {Component} from 'react';
-import Viget from './Viget';
+import Scene from './Scene';
 import Menu from './Menu';
 import '../scss/app.scss';
 
 export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state  = {
-        menu: false
-    };
-}
+  state = {
+    menu: false
+  };
   
-toggleMenu = () => {
-    this.setState({
-        menu: !this.state.menu
-    });
-};
+  toggleMenu = () => {
+      this.setState(prevState => ({
+        menu: !prevState.menu
+      }));
+  };
+  
   render() {
     return (
       <div className="App">
-        <Viget menu={this.state.menu} />
+        <Scene menu={this.state.menu} />
         <Menu menu={this.state.menu} toggleMenu={this.toggleMenu} />
       </div>
     );
   }
 }
+
+
 
 

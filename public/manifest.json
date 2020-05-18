@@ -1,6 +1,6 @@
 {
-  "short_name": "Viget",
-  "name": "Viget ✨",
+  "short_name": "Cosmos",
+  "name": "✨Cosmos ✨",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#1395ba",
-  "background_color": "#e57201"
+  "theme_color": "#D680FF",
+  "background_color": "#80B1FF"
 }
