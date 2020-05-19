@@ -337,7 +337,7 @@ export default class Scene extends Component {
     this.nebulaParticles.forEach(nebulaParticle => {
       nebulaParticle.rotation.z -= 0.001;
     });
-    if (this.camera.position.z > 45) {
+    if (this.camera.position.z < 45) {
       // Move camera for zoom-out effect on z-axis
       this.camera.position.z += this.dz;
     } else {
