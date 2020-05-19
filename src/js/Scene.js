@@ -17,7 +17,7 @@ export default class Scene extends Component {
     this.createNebula();
     this.createPlanet();
     this.createMoon();
-    // this.createText();
+    this.createText();
     this.resize();
     this.start();
   }
@@ -47,7 +47,8 @@ export default class Scene extends Component {
     
     // LIGHTS
     // Create ambient light and add to scene
-    this.ambientLight = new THREE.AmbientLight(0xf2f2f2);
+    // this.ambientLight = new THREE.AmbientLight(0xf2f2f2);
+    this.ambientLight = new THREE.AmbientLight(0x80B1FF);
     this.scene.add(this.ambientLight);
     
     // Create directional light and add to scene
@@ -160,7 +161,7 @@ export default class Scene extends Component {
     // Create planet mesh with new icosahedron geometry and phong material
     const planetGeometry = new THREE.IcosahedronGeometry(7, 1);
     const planetMaterial = new THREE.MeshPhongMaterial({
-      color: 0xD680FF,
+      color: 0x80B1FF,
       shading: FlatShading
     });
     this.planet = new THREE.Mesh(planetGeometry, planetMaterial);
@@ -202,29 +203,30 @@ export default class Scene extends Component {
     this.scene.add(this.smallSphere);
   };
   
-  // createText = () => {
-  //   // TEXT
-  //   // Create font loader
-  //   const fontLoader = new THREE.FontLoader();
-  //   // Use parse instead of load the font since the font is being imported as json and does not need to be loaded with an async call.
-  //   const font = fontLoader.parse(verano);
-  //   // Create text geometry with string and options object
-  //   const textGeometry = new THREE.TextGeometry('Space', {
-  //     font,
-  //     size: 10,
-  //     height: 3,
-  //     curveSegments: 20,
-  //     bevelEnabled: false
-  //   } );
-  //   // Create text material
-  //   const textMaterial = new THREE.MeshLambertMaterial({
-  //     color: 0xc4c4c4
-  //   });
-  //   // Create text mesh, position it under the animated logo, and add to scene
-  //   this.text = new THREE.Mesh(textGeometry, textMaterial);
-  //   this.text.position.set(-15, -10, 0);
-  //   this.scene.add(this.text);
-  // };
+  createText = () => {
+    // TEXT
+    // Create font loader
+    const fontLoader = new THREE.FontLoader();
+    // Use parse instead of load the font since the font is being imported as json and does not need to be loaded with an async call.
+    const font = fontLoader.parse(verano);
+    // Create text geometry with string and options object
+    const textGeometry = new THREE.TextGeometry('Click on 3D objects to change the color!', {
+      font,
+      size: 1.25,
+      height: 0.5,
+      curveSegments: 20,
+      bevelEnabled: false
+    } );
+    // Create text material
+    const textMaterial = new THREE.MeshPhongMaterial({
+      color: 0xD680FF,
+      shading: FlatShading
+    });
+    // Create text mesh, position it under the animated logo, and add to scene
+    this.text = new THREE.Mesh(textGeometry, textMaterial);
+    this.text.position.set(-15, -13, 0);
+    this.scene.add(this.text);
+  };
 
   resize = () => {
     // Make window responsive so animation won't become distorted or clipped on resize
@@ -292,7 +294,7 @@ export default class Scene extends Component {
       this.raycaster.setFromCamera(this.mouse, this.camera);
       // Calculate objects intersecting the raycaster
        // const intersects = this.raycaster.intersectObjects([this.smallSphere, this.bigSphere, this.text]);
-       const intersects = this.raycaster.intersectObjects([this.smallSphere, this.planet]);
+       const intersects = this.raycaster.intersectObjects([this.smallSphere, this.planet, this.text]);
        // Loop through the intersects array 
       for (let i = 0; i < intersects.length; i++) {
           // If there are any 3D objects the user's mouse intersected with, change that object's color to a random color
