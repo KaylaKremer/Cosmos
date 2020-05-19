@@ -48,26 +48,26 @@ export default class Scene extends Component {
     // LIGHTS
     // Create ambient light and add to scene
     // this.ambientLight = new THREE.AmbientLight(0xf2f2f2);
-    this.ambientLight = new THREE.AmbientLight(0x80B1FF);
+    this.ambientLight = new THREE.AmbientLight(0xDDDDDD, 0.75);
     this.scene.add(this.ambientLight);
     
     // Create directional light and add to scene
     this.directionalLight = new THREE.DirectionalLight(0xff8c19);
-    this.directionalLight.position.set(0,0,1);
+    this.directionalLight.position.set(0, 0, 1);
     this.scene.add(this.directionalLight);
     
     // Create three spotlights to add color variety to nebula texture and add all to scene
     // Red light
-    this.redLight = new THREE.PointLight(0xef1039,10,550,2);
-    this.redLight.position.set(-50,100,-150);
+    this.redLight = new THREE.PointLight(0x07ef16, 10, 550, 2);
+    this.redLight.position.set(-50, 100, -150);
     this.scene.add(this.redLight);
     // Pink light
-    this.pinkLight = new THREE.PointLight(0xef56dd,10,450,2);
-    this.pinkLight.position.set(-150,150,-150);
+    this.pinkLight = new THREE.PointLight(0xef56dd, 10, 450, 2);
+    this.pinkLight.position.set(-150, 150, -150);
     this.scene.add(this.pinkLight);
     // Purple light
-    this.purpleLight = new THREE.PointLight(0xcf6df9,10,550,2);
-    this.purpleLight.position.set(-100,200,-150);
+    this.purpleLight = new THREE.PointLight(0xcf6df9, 10, 550, 2);
+    this.purpleLight.position.set(-100, 200, -150);
     this.scene.add(this.purpleLight);
     
     // RENDERER
@@ -90,7 +90,7 @@ export default class Scene extends Component {
     this.theta = 0;
     this.dTheta = 2 * Math.PI / 1000;
     this.center = new THREE.Vector3();
-    this.dz = .3;
+    this.dz = 0.3;
   };
   
   onMouseClick = event => { 
@@ -109,9 +109,9 @@ export default class Scene extends Component {
     loader.load(space, texture => {
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
         texture.offset.set(0, 0);
-        texture.repeat.set(3, 1);
+        texture.repeat.set(3, 3);
         // Create new sphere geometry and map the space texture to both sides of it.
-        const spaceGeometry = new THREE.SphereGeometry(1000, 50, 50);
+        const spaceGeometry = new THREE.BoxGeometry(1000, 1000, 1000);
         const spaceMaterial = new THREE.MeshLambertMaterial({
         map: texture,
         side: THREE.DoubleSide
@@ -140,7 +140,7 @@ export default class Scene extends Component {
       });
       
       // Generate 15 nebula and set their positions to be random
-      for(let p = 0; p < 15; p++) {
+      for(let p = 0; p < 12; p++) {
         let nebula = new THREE.Mesh(nebulaGeometry, nebulaMaterial);
         nebula.position.set(
           Math.random() * 400 - 150,
@@ -149,7 +149,7 @@ export default class Scene extends Component {
         );
         
         // Set opacity of each nebula to allow for them to overlay each other
-        nebula.material.opacity = 0.20;
+        nebula.material.opacity = 0.15;
         
         // Add each nebula to array and scene
         this.nebulaParticles.push(nebula);
@@ -209,7 +209,7 @@ export default class Scene extends Component {
     });
     this.moon = new THREE.Mesh(moonGeometry, moonMaterial);
     // Set position of y axis so moon can orbit around the planet
-    this.moon.position.set(0, 7, 0); 
+    this.moon.position.set(0, 3, 0); 
     this.moonGroup.add(this.moon);
     
     // Repeat same process of creating the moon's wireframe mesh
@@ -221,7 +221,7 @@ export default class Scene extends Component {
       side: THREE.DoubleSide
     });
     this.moonWireframe = new THREE.Mesh(moonWireframe, moonWireframeMaterial);
-    this.moonWireframe.position.set(0, 7, 0);
+    this.moonWireframe.position.set(0, 3, 0);
     
     // Add moon wireframe mesh to the moonGroup
     this.moonGroup.add(this.moonWireframe);
@@ -303,6 +303,7 @@ export default class Scene extends Component {
     this.theta += this.dTheta;
     this.moonGroup.position.x = this.r * Math.cos(this.theta);
     this.moonGroup.position.z = this.r * Math.sin(this.theta);
+    this.moonGroup.position.y = this.r * Math.cos(this.theta) * 0.75;
     this.moonGroup.rotation.y -= this.r * 0.0010;
     
     
