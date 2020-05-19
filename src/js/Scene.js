@@ -5,6 +5,7 @@ import '../scss/scene.scss';
 import space from '../images/space.jpg';
 import nebula from '../images/nebula.png';
 import verano from '../fonts/verano.typeface.json';
+import { FlatShading } from 'three';
 
 export default class Scene extends Component {
   
@@ -13,7 +14,9 @@ export default class Scene extends Component {
   componentDidMount() {
     this.init();
     this.createBackground();
-    this.createScene();
+    this.createNebula();
+    this.createPlanet();
+    this.createMoon();
     // this.createText();
     this.resize();
     this.start();
@@ -34,7 +37,7 @@ export default class Scene extends Component {
     // CAMERA
     // Create new perspective camera
     this.camera = new THREE.PerspectiveCamera(
-      60,
+      45,
       this.mount.current.clientWidth / this.mount.current.clientHeight,
       0.1,
       10000
@@ -116,8 +119,12 @@ export default class Scene extends Component {
       this.space = new THREE.Mesh(spaceGeometry, spaceMaterial);
       this.scene.add(this.space);
     });
-    
+  };
+  
+  createNebula = () => {
     // NEBULA EFFECT
+    // Create loader to load nebula texture
+    const loader = new THREE.TextureLoader();
     // Create array to hold each nebula particle
     this.nebulaParticles = [];
     // Use same loader from space texture to load nebula cloud texture
@@ -144,19 +151,45 @@ export default class Scene extends Component {
     });
   };
   
-  createScene = () => {
-    // BIG BLUE SPHERE
-    // Create sphere mesh with new geometry and material
-    const bigSphereGeometry = new THREE.SphereGeometry(5, 50, 50);
-    const bigSphereMaterial = new THREE.MeshLambertMaterial({
-      color: 0x1395ba
+  createPlanet = () => {
+    // PLANET
+    
+    // Create empty 3D object to act as a group for holding more than one mesh
+    this.planetGroup = new THREE.Object3D();
+    
+    // Create planet mesh with new icosahedron geometry and phong material
+    const planetGeometry = new THREE.IcosahedronGeometry(7, 1);
+    const planetMaterial = new THREE.MeshPhongMaterial({
+      color: 0xD680FF,
+      shading: FlatShading
     });
-    this.bigSphere = new THREE.Mesh(bigSphereGeometry, bigSphereMaterial);
-    this.bigSphere.position.set(0, 5, 0);
-    // Add big sphere to scene
-    this.scene.add(this.bigSphere);
+    this.planet = new THREE.Mesh(planetGeometry, planetMaterial);
+    this.planet.position.set(0, 0, 0);
+    
+    // Add planet mesh to planetGroup
+    this.planetGroup.add(this.planet);
+    
+    // Repeat same process of creating the planet's wireframe mesh
+    const planetWireframe = new THREE.IcosahedronGeometry(9, 1);
+    const planetWireframeMaterial = new THREE.MeshPhongMaterial({
+      color: 0xFFFFFF,
+      shading: FlatShading,
+      wireframe: true,
+      side: THREE.DoubleSide
+    });
+    this.planetWireframe = new THREE.Mesh(planetWireframe, planetWireframeMaterial);
+    this.planetWireframe.position.set(0, 0, 0);
+    
+    // Add planet wireframe mesh to planetGroup
+    this.planetGroup.add(this.planetWireframe);
+    
+    // Add planetGroup to the scene
+    this.scene.add(this.planetGroup);
+  };
+  
+  createMoon = () => {
    
-    // SMALL ORANGE SPHERE
+    // SMALL SPHERE
     // Create sphere mesh with new geometry and material
     const smallSphereGeometry = new THREE.SphereGeometry(2, 50,50);
     const smallSphereMaterial = new THREE.MeshLambertMaterial({
@@ -219,11 +252,11 @@ export default class Scene extends Component {
   };
     
   animate = () => {
-    //Rotate nebula particles so they appear floating
+    // Rotate nebula particles so they appear floating
     this.nebulaParticles.forEach(nebulaParticle => {
       nebulaParticle.rotation.z -= 0.001;
     });
-    if (this.camera.position.z < 45) {
+    if (this.camera.position.z > 45) {
       // Move camera for zoom-out effect on z-axis
       this.camera.position.z += this.dz;
     } else {
@@ -236,6 +269,14 @@ export default class Scene extends Component {
     this.theta += this.dTheta;
     this.smallSphere.position.x = this.r * Math.cos(this.theta);
     this.smallSphere.position.z = this.r * Math.sin(this.theta);
+    
+    this.smallSphere.rotation.x -= 0.0010;
+    this.smallSphere.rotation.y += 0.0020;
+    
+    this.planetGroup.rotation.x -= 0.0020;
+    this.planetGroup.rotation.y -= 0.0030;
+    
+    
     // Render the scene
     this.renderScene();
     // Add mouse click event listener so user can click on 3D objects in the scene
@@ -251,7 +292,7 @@ export default class Scene extends Component {
       this.raycaster.setFromCamera(this.mouse, this.camera);
       // Calculate objects intersecting the raycaster
        // const intersects = this.raycaster.intersectObjects([this.smallSphere, this.bigSphere, this.text]);
-       const intersects = this.raycaster.intersectObjects([this.smallSphere, this.bigSphere]);
+       const intersects = this.raycaster.intersectObjects([this.smallSphere, this.planet]);
        // Loop through the intersects array 
       for (let i = 0; i < intersects.length; i++) {
           // If there are any 3D objects the user's mouse intersected with, change that object's color to a random color
