@@ -205,7 +205,6 @@ export default class Scene extends Component {
   createMoons = () => {
     // MOON
     // Create empty 3D objects to act as a groups for holding two meshes for a moon
-  
       this.moonGroup1 = new THREE.Object3D();
       this.moonGroup2 = new THREE.Object3D();
       this.moonGroup3 = new THREE.Object3D();
@@ -226,7 +225,7 @@ export default class Scene extends Component {
         shading: FlatShading
       });
       
-      // Create moon wireframe material. This can be shared amongst all moons since it does not need to change
+      // Create moon wireframe material. This can be shared amongst all moons since it does not need to be interactive
       const moonWireframeMaterial = new THREE.MeshPhongMaterial({
         color: 0xFFFFFF,
         shading: FlatShading,
@@ -234,11 +233,11 @@ export default class Scene extends Component {
         side: THREE.DoubleSide
       });
     
-      // Create moon1 mesh with tetrahedron geometry and moonMaterial
+      // Create moon1 mesh with tetrahedron geometry and moonMaterial1
       const moon1 = new THREE.TetrahedronGeometry(1.75, 1);
       this.moon1 = new THREE.Mesh(moon1, moonMaterial1);
  
-      // Repeat same process of creating the moon's wireframe mesh, making it slightly bigger and with moonWireframeMaterial
+      // Repeat same process of creating the moon1's wireframe mesh, making it slightly bigger so the moon can fit inside it
       const moonWireframe1 = new THREE.TetrahedronGeometry(2, 1);
       this.moonWireframe1 = new THREE.Mesh(moonWireframe1, moonWireframeMaterial);
       
@@ -247,31 +246,31 @@ export default class Scene extends Component {
       this.moonGroup1.add(this.moonWireframe1);
       
       // Repeat steps above to make moonGroup2 and moonGroup3, but with different sizes
-      // Create moon2 mesh with tetrahedron geometry and moonMaterial
+      // Create moon2 mesh with tetrahedron geometry and moonMaterial2
       const moon2 = new THREE.TetrahedronGeometry(0.5, 1);
       this.moon2 = new THREE.Mesh(moon2, moonMaterial2);
  
-      // Repeat same process of creating the moon's wireframe mesh, making it slightly bigger and with moonWireframeMaterial
+      // Repeat same process of creating the moon2's wireframe mesh, making it slightly bigger so the moon can fit inside it
       const moonWireframe2 = new THREE.TetrahedronGeometry(0.75, 1);
       this.moonWireframe2 = new THREE.Mesh(moonWireframe2, moonWireframeMaterial);
       
-      // Add moon2 & moonWireframe1 meshes to moonGroup2
+      // Add moon2 & moonWireframe2 meshes to moonGroup2
       this.moonGroup2.add(this.moon2);
       this.moonGroup2.add(this.moonWireframe2);
       
-     // Create moon3 mesh with tetrahedron geometry and moonMaterial
+     // Create moon3 mesh with tetrahedron geometry and moonMaterial3
       const moon3 = new THREE.TetrahedronGeometry(1, 1);
       this.moon3 = new THREE.Mesh(moon3, moonMaterial3);
 
-     // Repeat same process of creating the moon's wireframe mesh, making it slightly bigger and with moonWireframeMaterial
+     // Repeat same process of creating the moon3's wireframe mesh, making it slightly bigger so the moon can fit inside it
       const moonWireframe3 = new THREE.TetrahedronGeometry(1.25, 1);
       this.moonWireframe3 = new THREE.Mesh(moonWireframe3, moonWireframeMaterial);
      
-     // Add moon2 & moonWireframe1 meshes to moonGroup2
+     // Add moon3 & moonWireframe3 meshes to moonGroup3
       this.moonGroup3.add(this.moon3);
       this.moonGroup3.add(this.moonWireframe3);
 
-     // Add moonGroups to the scene
+     // Add all moonGroups to the scene
       this.scene.add(this.moonGroup1);
       this.scene.add(this.moonGroup2);
       this.scene.add(this.moonGroup3);
@@ -393,7 +392,7 @@ export default class Scene extends Component {
       this.raycaster.setFromCamera(this.mouse, this.camera);
       
       // Calculate objects intersecting the raycaster 
-      // (Only the planet and moon should be intersected and not their group which includes the wireframe)
+      // (Only the planet and moons should be intersected, not the moonGroups which include the wireframe!)
       const intersects = this.raycaster.intersectObjects([this.planet, this.moon1, this.moon2, this.moon3, this.text]);
       
       // Loop through the intersects array 
