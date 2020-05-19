@@ -189,6 +189,9 @@ export default class Scene extends Component {
     // Add planet wireframe mesh to the planetGroup
     this.planetGroup.add(this.planetWireframe);
     
+    // Set planetGroup a bit higher on the screen
+    this.planetGroup.position.y = 2;
+    
     // Add planetGroup to the scene
     this.scene.add(this.planetGroup);
   };
@@ -252,7 +255,7 @@ export default class Scene extends Component {
     
     // Create text mesh, position it under the animated logo, and add to scene
     this.text = new THREE.Mesh(textGeometry, textMaterial);
-    this.text.position.set(-7.5, -13, 0);
+    this.text.position.set(-7.5, -12, 0);
     this.scene.add(this.text);
   };
 
@@ -301,6 +304,7 @@ export default class Scene extends Component {
     this.moonGroup.position.x = this.r * Math.cos(this.theta);
     this.moonGroup.position.z = this.r * Math.sin(this.theta);
     this.moonGroup.rotation.y -= this.r * 0.0010;
+    
     
     // Have planet always rotating on x and y axis
     this.planetGroup.rotation.x -= 0.0020;
