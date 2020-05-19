@@ -16,7 +16,7 @@ export default class Scene extends Component {
     this.createBackground();
     this.createNebula();
     this.createPlanet();
-    this.createMoon();
+    this.createMoons();
     this.createText();
     this.resize();
     this.start();
@@ -86,9 +86,15 @@ export default class Scene extends Component {
     
     // ANIMATION VALUES
     // Initialize values to be used when animating the small sphere's orbit around the big sphere
-    this.r = 9;
-    this.theta = 0;
-    this.dTheta = 2 * Math.PI / 1000;
+    this.r1 = 9;
+    this.r2 = -7;
+    this.r3 = 11;
+    this.theta1 = 0;
+    this.theta2 = 5;
+    this.theta3 = 0;
+    this.dTheta1 = 3 * Math.PI / 1000;
+    this.dTheta2 = 6 * Math.PI / 1000;
+    this.dTheta3 = 4 * Math.PI / 1000;
     this.center = new THREE.Vector3();
     this.dz = 0.3;
   };
@@ -101,7 +107,7 @@ export default class Scene extends Component {
   } 
   
   createBackground = () => {
-    // SPACE BACKGROUND
+    // SPACE
     // Create loader to load space texture
     const loader = new THREE.TextureLoader();
     
@@ -196,38 +202,80 @@ export default class Scene extends Component {
     this.scene.add(this.planetGroup);
   };
   
-  createMoon = () => {
+  createMoons = () => {
     // MOON
-    // Create empty 3D object to act as a group for holding more than one mesh
-    this.moonGroup = new THREE.Object3D();
+    // Create empty 3D objects to act as a groups for holding two meshes for a moon
+  
+      this.moonGroup1 = new THREE.Object3D();
+      this.moonGroup2 = new THREE.Object3D();
+      this.moonGroup3 = new THREE.Object3D();
+      
+      // Create separate materials for the moons so they can be changed individually when user clicks on them
+      const moonMaterial1 = new THREE.MeshPhongMaterial({
+        color: 0xD680FF,
+        shading: FlatShading
+      });
+      
+      const moonMaterial2 = new THREE.MeshPhongMaterial({
+        color: 0xD680FF,
+        shading: FlatShading
+      });
+      
+      const moonMaterial3 = new THREE.MeshPhongMaterial({
+        color: 0xD680FF,
+        shading: FlatShading
+      });
+      
+      // Create moon wireframe material. This can be shared amongst all moons since it does not need to change
+      const moonWireframeMaterial = new THREE.MeshPhongMaterial({
+        color: 0xFFFFFF,
+        shading: FlatShading,
+        wireframe: true,
+        side: THREE.DoubleSide
+      });
     
-    // Create moon mesh with tetrahedron geometry and phong material
-    const moonGeometry = new THREE.TetrahedronGeometry(1.5, 1);
-    const moonMaterial = new THREE.MeshPhongMaterial({
-      color: 0xD680FF,
-      shading: FlatShading
-    });
-    this.moon = new THREE.Mesh(moonGeometry, moonMaterial);
-    // Set position of y axis so moon can orbit around the planet
-    this.moon.position.set(0, 3, 0); 
-    this.moonGroup.add(this.moon);
-    
-    // Repeat same process of creating the moon's wireframe mesh
-    const moonWireframe = new THREE.TetrahedronGeometry(1.75, 1);
-    const moonWireframeMaterial = new THREE.MeshPhongMaterial({
-      color: 0xFFFFFF,
-      shading: FlatShading,
-      wireframe: true,
-      side: THREE.DoubleSide
-    });
-    this.moonWireframe = new THREE.Mesh(moonWireframe, moonWireframeMaterial);
-    this.moonWireframe.position.set(0, 3, 0);
-    
-    // Add moon wireframe mesh to the moonGroup
-    this.moonGroup.add(this.moonWireframe);
-    
-    // Add moonGroup sphere to the scene
-    this.scene.add(this.moonGroup);
+      // Create moon1 mesh with tetrahedron geometry and moonMaterial
+      const moon1 = new THREE.TetrahedronGeometry(1.75, 1);
+      this.moon1 = new THREE.Mesh(moon1, moonMaterial1);
+ 
+      // Repeat same process of creating the moon's wireframe mesh, making it slightly bigger and with moonWireframeMaterial
+      const moonWireframe1 = new THREE.TetrahedronGeometry(2, 1);
+      this.moonWireframe1 = new THREE.Mesh(moonWireframe1, moonWireframeMaterial);
+      
+      // Add moon1 & moonWireframe1 meshes to moonGroup1
+      this.moonGroup1.add(this.moon1);
+      this.moonGroup1.add(this.moonWireframe1);
+      
+      // Repeat steps above to make moonGroup2 and moonGroup3, but with different sizes
+      // Create moon2 mesh with tetrahedron geometry and moonMaterial
+      const moon2 = new THREE.TetrahedronGeometry(0.5, 1);
+      this.moon2 = new THREE.Mesh(moon2, moonMaterial2);
+ 
+      // Repeat same process of creating the moon's wireframe mesh, making it slightly bigger and with moonWireframeMaterial
+      const moonWireframe2 = new THREE.TetrahedronGeometry(0.75, 1);
+      this.moonWireframe2 = new THREE.Mesh(moonWireframe2, moonWireframeMaterial);
+      
+      // Add moon2 & moonWireframe1 meshes to moonGroup2
+      this.moonGroup2.add(this.moon2);
+      this.moonGroup2.add(this.moonWireframe2);
+      
+     // Create moon3 mesh with tetrahedron geometry and moonMaterial
+      const moon3 = new THREE.TetrahedronGeometry(1, 1);
+      this.moon3 = new THREE.Mesh(moon3, moonMaterial3);
+
+     // Repeat same process of creating the moon's wireframe mesh, making it slightly bigger and with moonWireframeMaterial
+      const moonWireframe3 = new THREE.TetrahedronGeometry(1.25, 1);
+      this.moonWireframe3 = new THREE.Mesh(moonWireframe3, moonWireframeMaterial);
+     
+     // Add moon2 & moonWireframe1 meshes to moonGroup2
+      this.moonGroup3.add(this.moon3);
+      this.moonGroup3.add(this.moonWireframe3);
+
+     // Add moonGroups to the scene
+      this.scene.add(this.moonGroup1);
+      this.scene.add(this.moonGroup2);
+      this.scene.add(this.moonGroup3);
+     
   };
   
   createText = () => {
@@ -289,7 +337,7 @@ export default class Scene extends Component {
     this.nebulaParticles.forEach(nebulaParticle => {
       nebulaParticle.rotation.z -= 0.001;
     });
-    if (this.camera.position.z < 45) {
+    if (this.camera.position.z > 45) {
       // Move camera for zoom-out effect on z-axis
       this.camera.position.z += this.dz;
     } else {
@@ -299,12 +347,28 @@ export default class Scene extends Component {
     // Have camera always facing the center at the origin (0,0,0)
     this.camera.lookAt(this.center);
     
-    // Have moon orbit around the planet
-    this.theta += this.dTheta;
-    this.moonGroup.position.x = this.r * Math.cos(this.theta);
-    this.moonGroup.position.z = this.r * Math.sin(this.theta);
-    this.moonGroup.position.y = this.r * Math.cos(this.theta) * 0.75;
-    this.moonGroup.rotation.y -= this.r * 0.0010;
+    // Have moon groups spin on their axis and orbit around the planet
+    this.theta1 += this.dTheta1;
+    this.theta2 += this.dTheta2;
+    this.theta3 -= this.dTheta3;
+    
+    this.moonGroup1.position.x = this.r1 * Math.cos(this.theta1) * 1.05;
+    this.moonGroup1.position.y = this.r1 * Math.cos(this.theta1) * 0.75;
+    this.moonGroup1.position.z = this.r1 * Math.sin(this.theta1) * 1.25;
+    this.moonGroup1.rotation.y -= this.r1 * 0.0010;
+    this.moonGroup1.rotation.z -= this.r1 * 0.0010;
+    
+    this.moonGroup2.position.x = this.r2 * Math.cos(this.theta2) * -1.25;
+    this.moonGroup2.position.y = this.r2 * Math.cos(this.theta2);
+    this.moonGroup2.position.z = this.r2 * Math.sin(this.theta2) * -1;
+    this.moonGroup2.rotation.y -= this.r2 * 0.0050;
+    this.moonGroup2.rotation.z -= this.r2 * 0.0025;
+    
+    this.moonGroup3.position.x = this.r3 * Math.cos(this.theta3) * 0.3;
+    this.moonGroup3.position.y = this.r3 * Math.sin(this.theta3);
+    this.moonGroup3.position.z = this.r3 * Math.cos(this.theta3);
+    this.moonGroup3.rotation.y -= this.r3 * 0.0015;
+    this.moonGroup3.rotation.z -= this.r3 * 0.0025;
     
     
     // Have planet always rotating on x and y axis
@@ -330,7 +394,7 @@ export default class Scene extends Component {
       
       // Calculate objects intersecting the raycaster 
       // (Only the planet and moon should be intersected and not their group which includes the wireframe)
-      const intersects = this.raycaster.intersectObjects([this.planet, this.moon, this.text]);
+      const intersects = this.raycaster.intersectObjects([this.planet, this.moon1, this.moon2, this.moon3, this.text]);
       
       // Loop through the intersects array 
       for (let i = 0; i < intersects.length; i++) {
