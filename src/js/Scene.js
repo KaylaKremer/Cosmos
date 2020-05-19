@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as THREE from 'three';
 import PropTypes from 'prop-types';
 import '../scss/scene.scss';
-import space from '../images/space.jpg';
+// import space from '../images/space.jpg';
 import nebula from '../images/nebula.png';
 import verano from '../fonts/verano.typeface.json';
 import { FlatShading } from 'three';
@@ -13,7 +13,7 @@ export default class Scene extends Component {
   
   componentDidMount() {
     this.init();
-    this.createBackground();
+    //this.createSpace();
     this.createNebula();
     this.createPlanet();
     this.createMoons();
@@ -47,18 +47,17 @@ export default class Scene extends Component {
     
     // LIGHTS
     // Create ambient light and add to scene
-    // this.ambientLight = new THREE.AmbientLight(0xf2f2f2);
-    this.ambientLight = new THREE.AmbientLight(0xDDDDDD, 0.75);
+    this.ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
     this.scene.add(this.ambientLight);
     
     // Create directional light and add to scene
     this.directionalLight = new THREE.DirectionalLight(0xff8c19);
     this.directionalLight.position.set(0, 0, 1);
     this.scene.add(this.directionalLight);
-    
+  
     // Create three spotlights to add color variety to nebula texture and add all to scene
-    // Red light
-    this.redLight = new THREE.PointLight(0x07ef16, 10, 550, 2);
+    // Green light
+    this.redLight = new THREE.PointLight(0xed190e, 10, 550, 5);
     this.redLight.position.set(-50, 100, -150);
     this.scene.add(this.redLight);
     // Pink light
@@ -106,28 +105,30 @@ export default class Scene extends Component {
     this.mouse.y = - (event.clientY / this.mount.current.clientHeight) * 2 + 1; 
   } 
   
-  createBackground = () => {
-    // SPACE
-    // Create loader to load space texture
-    const loader = new THREE.TextureLoader();
+  // Decided to remove the texture background, but leaving in code as reference
+  // createSpace = () => {
+  //   // SPACE
+  //   // Create loader to load space texture
+  //   const loader = new THREE.TextureLoader();
     
-    // Load space texture and have it wrap with repeating enabled
-    loader.load(space, texture => {
-        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-        texture.offset.set(0, 0);
-        texture.repeat.set(3, 3);
-        // Create new sphere geometry and map the space texture to both sides of it.
-        const spaceGeometry = new THREE.BoxGeometry(1000, 1000, 1000);
-        const spaceMaterial = new THREE.MeshLambertMaterial({
-        map: texture,
-        side: THREE.DoubleSide
-      });
+  //   // Load space texture and have it wrap with repeating enabled
+  //   loader.load(space, texture => {
+  //       texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  //       texture.offset.set(0, 0);
+  //       texture.repeat.set(3, 3);
+  //       // Create new sphere geometry and map the space texture to both sides of it.
+  //       const spaceGeometry = new THREE.BoxGeometry(1000, 1000, 1000);
+  //       const spaceMaterial = new THREE.MeshLambertMaterial({
+  //       map: texture,
+  //       side: THREE.DoubleSide
+  //     });
       
-      // Add space geometry to the scene
-      this.space = new THREE.Mesh(spaceGeometry, spaceMaterial);
-      this.scene.add(this.space);
-    });
-  };
+  //     // Add space geometry to the scene
+  //     this.space = new THREE.Mesh(spaceGeometry, spaceMaterial);
+  //     this.space.opacity = 0.8;
+  //     this.scene.add(this.space);
+  //   });
+  // };
   
   createNebula = () => {
     // NEBULA EFFECT
@@ -145,7 +146,7 @@ export default class Scene extends Component {
         transparent: true
       });
       
-      // Generate 15 nebula and set their positions to be random
+      // Generate 12 nebula and set their positions to be random
       for(let p = 0; p < 12; p++) {
         let nebula = new THREE.Mesh(nebulaGeometry, nebulaMaterial);
         nebula.position.set(
