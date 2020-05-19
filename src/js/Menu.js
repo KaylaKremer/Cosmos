@@ -3,7 +3,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faGithub, faLinkedin, faTwitter} from '@fortawesome/free-brands-svg-icons';
 import {faPalette, faEnvelope} from '@fortawesome/free-solid-svg-icons';
 import '../scss/menu.scss';
-import kayla from '../images/kayla.jpg';
+import logo from '../images/logo.png';
   
 const Menu = props => {
     return (
@@ -16,7 +16,7 @@ const Menu = props => {
           </label>
           <nav id="sidebar" className="sidebar">
             <div className="image-container">
-                <img alt="Kayla Kremer" className="image" src={kayla} />
+                <img alt="Kayla Kremer" className="image" src={logo} />
                 <span className="name">Kayla Kremer</span>
             </div>
             <div className="menubar-container">

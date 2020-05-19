@@ -2,9 +2,10 @@
     --toggler-size: 30px;
     --toggler-line-number: 3;
     --toggler-line-size: calc(var(--toggler-size) / (var(--toggler-line-number) + var(--toggler-line-number) - 1));
-    --blue: #1395ba;
-    --orange: #e57201;
-    --white: #ffffff;
+    --pink: #D680FF;
+    --blue: #80B1FF;
+    --white: #fff;
+    --black: #000;
 }
 
 $total: 3;
@@ -17,7 +18,7 @@ $total: 3;
 .sidebar {
   width: 100%;
   transform: translateX(calc(100% * -1));
-  background-color: var(--blue);
+  background-color: var(--black);
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -56,17 +57,19 @@ $total: 3;
     color: var(--white);
     font-weight: 100;
     text-decoration: none;
-    font-size: 5rem;
+    font-size: 3.5rem;
     transition: all .25s ease-out;
     padding: 10px;
+    margin: 0.5rem 0;
     border-radius: 5px;
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
-    &:hover,
-    &:focus,
-    &:active {
-        background-color: var(--orange);
+    width: 100%;
+    &:hover {
+      background: linear-gradient(90deg, var(--blue) 45%, var(--pink) 100%);
+      background-size: 200% 200%;
+      animation: gradientButton 0.5s ease-out forwards;
     }
     svg {
         margin-right: 15px;
@@ -141,64 +144,62 @@ $total: 3;
     
 .image {
     width: 450px;
-    border-radius: 50%;
 }
     
 .name {
     color: var(--white);
-    background-color: var(--orange);
-    font-weight: 300;
+    background: linear-gradient(90deg, var(--pink) 35%, var(--blue) 100%);
+    background-size: 200% 200%;
+    font-weight: 500;
     text-decoration: none;
-    font-size: 4rem;
+    font-size: 5rem;
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     text-align: center;
     padding-bottom: 0.5rem;
+    animation: gradient 3s ease-in-out infinite;
 }
 
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes gradientButton {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: -100% 50%;
+  }
+}
 
 @media screen and (max-width: 900px) {
-    .sidebar {
-        flex-direction: column;
-    }
-    .image-container {
-        margin-top: 40rem;
-    }
-    .menubar-container {
-        margin-bottom: 2rem;
-        margin-top: 2rem;
-        margin-left: 0;
-    }
+  .sidebar {
+      flex-direction: column;
+  }
+  .image {
+    width: 350px;
+  }
+  .image-container {
+      margin-top: 7rem;
+  }
+  .menu-link {
+    font-size: 2.5rem;
+  }
+  .menubar-container {
+      margin: 1rem 0;
+  }
+  .name {
+    font-size: 4rem;
 }
-
-@media screen and (max-width: 500px) {
-    .image {
-        width: 300px;
-    }
-    .menu-link {
-        font-size: 4rem;
-    }
-    .image-container {
-        margin-top: 25rem;
-    }
-    .name {
-        font-size: 3rem;
-    }
-}
-
-@media screen and (max-width: 375px) {
-    .name {
-        font-size: 2.5rem;
-    }
-    .image {
-        width: 250px;
-    }
-    .menu-link {
-        font-size: 3rem;
-    }
-    .image-container {
-        margin-top: 18rem;
-    }
 }
