@@ -1,5 +1,4 @@
 # :sparkles: Cosmos :sparkles:
-# :sparkles: Cosmos :sparkles:
 
 A small demo app of a 3D planet in the cosmos using React and THREE.js.
 
